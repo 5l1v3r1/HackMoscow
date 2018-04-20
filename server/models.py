@@ -33,10 +33,20 @@ class Hackathon(models.Model):
 	description = models.CharField(max_length=5000)
 	date = models.DateField()
 	duration = models.DateTimeField()
+	
+	@property
+	def hack_url(self):
+		return "/h{0}".format(self.id)
+
+
+class Team(models.Model):
+	name = models.CharField(max_length=60)
+	 
+
 
 class News (models.Model):
 	'''class for announcement'''
-text = models.CharField(max_length=2000)
+	text = models.CharField(max_length=2000)
 
 class Invintation(models.Model):
 	'''class for invitation to the hackthone'''
