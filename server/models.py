@@ -1,11 +1,15 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class Skill(models.Model):
 	'''model for skill'''
 	name = models.CharField(max_length=500)
 
-class User(models.Model):
-	'''model for user'''
+class Profile(models.Model):
+	'''model for Profile'''
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	access_level = models.IntegerField(
 		default=0, verbose_name='Уровень доступа')
 	birthday = models.DateField(auto_now=True)
@@ -15,6 +19,12 @@ class User(models.Model):
 	facebook = models.CharField(max_length=100)
 	vk = models.CharField(max_length=100)
 	skills = models.ManyToManyField(Skill)
+
+@receiver(post_save, sender=User)
+def update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+    instance.profile.save()
 
 class Hackathon(models.Model):
 	'''model for hackathon'''
@@ -28,8 +38,8 @@ text = models.CharField(max_length=2000)
 
 class Invintation(models.Model):
 	'''class for invitation to the hackthone'''
-	from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='from_user')
-	to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='to_user')
+	from_Profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='from_Profile')
+	to_Profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='to_Profile')
 	hackathon = models.ForeignKey(Hackathon, on_delete=models.CASCADE, related_name='hackathon')
 	date = models.DateField(auto_now=True)
 
