@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, HttpResponse
 from server.forms import SignUpForm, LoginForm, NewHackathonForm
 from django.contrib.auth.models import User
+from server.models import Hackathon
 # Create your views here.
 def signup(request):
     if request.method == 'POST':
@@ -43,6 +44,7 @@ def signin(request):
     return render(request, 'login.html', {'form': form})
 
 
+
 '''View for new hackathons'''
 def new_hackathon(request):
     if request.method == 'POST':
@@ -56,3 +58,17 @@ def new_hackathon(request):
     else:
         form = NewHackathonForm()
     return render(request, 'new_hackathon.html', {'form': form})
+
+def hackaton_list(request):
+    hackatons = Hackathon.objects.all()
+    return render(request, 'hackaton_list.html', {'hacks':hackatons})
+
+
+def hackathon_page(request, id):
+    try:
+        hack = Hackathon.objects.get(id=id)
+        return render(request, 'hackaton', {'hack':hack} )
+    except:
+        return HttpResponse("404")
+    
+

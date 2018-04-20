@@ -34,10 +34,20 @@ class Hackathon(models.Model):
 	date = models.DateField()
 	duration = models.IntegerField()
 	max_members = models.IntegerField()
+	
+	@property
+	def hack_url(self):
+		return "/h{0}".format(self.id)
+
+
+class Team(models.Model):
+	name = models.CharField(max_length=60)
+	 
+
 
 class News (models.Model):
 	'''class for announcement'''
-text = models.CharField(max_length=2000)
+	text = models.CharField(max_length=2000)
 
 class Invintation(models.Model):
 	'''class for invitation to the hackthone'''
