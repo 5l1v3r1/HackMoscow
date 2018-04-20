@@ -9,12 +9,11 @@ class User(models.Model):
 	access_level = models.IntegerField(
 		default=0, verbose_name='Уровень доступа')
 	birthday = models.DateField(auto_now=True)
-
 	name = models.CharField(max_length=100)
 	surname = models.CharField(max_length=100)
-	github = models.CharField(max_length=100, verbose_name='GITHUB')
-	facebook = models.CharField(max_length=100, verbose_name='FACEBOOK')
-	vk = models.CharField(max_length=100, verbose_name='VK')
+	github = models.CharField(max_length=100)
+	facebook = models.CharField(max_length=100)
+	vk = models.CharField(max_length=100)
 	skills = models.ManyToManyField(Skill)
 
 class Hackathon(models.Model):
