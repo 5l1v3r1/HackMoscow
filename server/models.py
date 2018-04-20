@@ -2,12 +2,12 @@ from django.db import models
 
 class Skill(models.Model):
 	'''model for skill'''
-	name = models.TextField()
+	name = models.CharField(max_length=500)
 
 class User(models.Model):
 	'''model for user'''
 	access_level = models.IntegerField(
-		default=0, choices=(0, 1, 2, 3), verbose_name='Уровень доступа')
+		default=0, verbose_name='Уровень доступа')
 	birthday = models.DateField(auto_now=True)
 
 	name = models.CharField(max_length=100)
@@ -25,11 +25,12 @@ class Hackathon(models.Model):
 
 class News (models.Model):
 	'''class for announcement'''
-	text = models.TextField()
+text = models.CharField(max_length=2000)
 
 class Invintation(models.Model):
 	'''class for invitation to the hackthone'''
-	from_user = models.OneToOneField(User, on_delete=models.SET_NULL)
-	to_user = models.OneToOneField(User, on_delete=models.SET_NULL)
-	hackathon = models.OneToOneField(Hackathon, on_delete=models.SET_NULL)
+	from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='from_user')
+	to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='to_user')
+	hackathon = models.ForeignKey(Hackathon, on_delete=models.CASCADE, related_name='hackathon')
+	date = models.DateField(auto_now=True)
 
