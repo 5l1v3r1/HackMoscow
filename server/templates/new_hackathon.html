@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New hackathon</title>
+</head>
+<body>
+    <h1>Create new Hackathon</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+          <p>
+            {{ field.label_tag }}<br>
+            {{ field }}
+
+            {% for error in field.errors %}
+              <p style="color: red">{{ error }}</p>
+            {% endfor %}
+          </p>
+        {% endfor %}
+        <button type="submit">Create!</button>
+    </form>
+</body>
+</html>

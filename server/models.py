@@ -32,7 +32,8 @@ class Hackathon(models.Model):
 	name = models.CharField(max_length=300)
 	description = models.CharField(max_length=5000)
 	date = models.DateField()
-	duration = models.DateTimeField()
+	duration = models.IntegerField()
+	max_members = models.IntegerField()
 
 class News (models.Model):
 	'''class for announcement'''

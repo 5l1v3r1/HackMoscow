@@ -1,7 +1,7 @@
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, HttpResponse
-from server.forms import SignUpForm, LoginForm
+from server.forms import SignUpForm, LoginForm, NewHackathonForm
 from django.contrib.auth.models import User
 # Create your views here.
 def signup(request):
@@ -41,4 +41,18 @@ def signin(request):
     else:
         form = LoginForm()
     return render(request, 'login.html', {'form': form})
-    
+
+
+'''View for new hackathons'''
+def new_hackathon(request):
+    if request.method == 'POST':
+        form = NewHackathonForm(request.POST)
+        if form.is_valid():
+            hackathon = form.save()
+            hackathon.refresh_from_db()
+            hackathon.save()
+
+            return HttpResponse("Hackathon created!")
+    else:
+        form = NewHackathonForm()
+    return render(request, 'new_hackathon.html', {'form': form})
