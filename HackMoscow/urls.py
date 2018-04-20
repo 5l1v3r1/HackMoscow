@@ -16,9 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from server.views import signup
-from server.views import user_info
+from server.views import user_info, all_hackathones
 urlpatterns = [
     #path('admin/', admin.site.urls),
     path('signup/', signup),
-	path('user/', user_info)
+	path('user/', user_info),
+	path('hacks/', all_hackathones)
 ]

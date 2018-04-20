@@ -1,16 +1,19 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Profile
-
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 from server.forms import SignUpForm, LoginForm
+from .models import Profile, Hackathon
 
 def user_info(request):
 	if request.method == 'GET':
 		user = Profile.objects.get(pk=id)
-		print(user.email)
+		return render(request, 'profile.html', )
+
+def all_hackathones(request):
+	hacks = Hackathon.objects.all()
+	return render(request, 'hacks.html', {'hacks': hacks})
 
 def signup(request):
 	if request.method == 'POST':
