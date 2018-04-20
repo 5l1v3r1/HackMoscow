@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.validators import MinValueValidator
 
 class Skill(models.Model):
 	'''model for skill'''
@@ -32,8 +33,8 @@ class Hackathon(models.Model):
 	name = models.CharField(max_length=300)
 	description = models.CharField(max_length=5000)
 	date = models.DateField()
-	duration = models.IntegerField()
-	max_members = models.IntegerField()
+	duration = models.IntegerField(validators=[MinValueValidator(1),])
+	max_members = models.IntegerField(validators=[MinValueValidator(1),])
 	
 	@property
 	def hack_url(self):
