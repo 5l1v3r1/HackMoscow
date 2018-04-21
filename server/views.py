@@ -153,8 +153,19 @@ def change_hackathon(request, id):
 
 
 def hack_info(request, hack_id):
-	hack = Hackathon.objects.get(id = hack_id)
-	if hack!=None:
-		return render(request, 'hack_info.html', {'hack':hack})
+	hack = get_object_or_404(Hackathon, id=hack_id)
+
+	if request.user.username != "":
+		user = get_object_or_404(User, username=request.user.username)
+		return render(request, 'hack_info.html', {'hack': hack, 'user_id': user.id})
 	else:
-		return HttpResponse("404")
+		return HttpResponse("Lol, who are you?")
+
+
+# adds user to hackathon
+def add_user_to_hack(request, hack_id, user_id):
+	hack = get_object_or_404(Hackathon, id=hack_id)
+	user = get_object_or_404(User, id=user_id)
+	hack.users.add(user)
+
+	return HttpResponse("You are added!")

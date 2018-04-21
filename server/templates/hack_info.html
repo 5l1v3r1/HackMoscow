@@ -21,8 +21,9 @@
                     {% endfor %}
                 </p>
             {% endfor %}
-            <button type="submit">Apply</button>
         </form>
+<input type="submit" value="Apply"
+    onclick="window.location='{% url 'add_user_to_hack' hack.id user_id %}';" />
 
 </div>
 </body>
