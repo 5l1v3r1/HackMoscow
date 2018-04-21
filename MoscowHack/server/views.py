@@ -29,7 +29,10 @@ def user_info(request):
 		user = Profile.objects.get(user_id=request.user.id)
 		skills = user.skills.all()
 		user_hack_rating = 0
-		rate = UserRating.objects.get(user_id=user.id)
+		try:
+			rate = UserRating.objects.get(user_id=user.id)
+		except:
+			rate = UserRating(user_id=user.id)
 		achievs = user.achievement_set.all()
 		diagram = rate.diagram
 		return render(request, 'profile.html',
@@ -149,7 +152,7 @@ def signin(request):
 				user = authenticate(username=username, password=raw_password)
 				if user:
 					login(request, user)
-					return HttpResponseRedirect('/lk')
+					return HttpResponseRedirect('/lk/')
 
 				else:
 					return HttpResponse("403")

@@ -74,25 +74,25 @@ class Team(models.Model):
 	hackathones = models.ManyToManyField(Hackathon)
 
 class UserRating(models.Model):
-	frontend = models.FloatField()
-	backend = models.FloatField()
-	ml = models.FloatField()
-	management = models.FloatField()
-	design = models.FloatField()
-	ar = models.FloatField()
-	blockchain = models.FloatField()
+	frontend = models.FloatField(default=0)
+	backend = models.FloatField(default=0)
+	ml = models.FloatField(default=0)
+	management = models.FloatField(default=0)
+	design = models.FloatField(default=0)
+	ar = models.FloatField(default=0)
+	blockchain = models.FloatField(default=0)
 	user = models.OneToOneField(Profile, on_delete=models.CASCADE)
-	android = models.FloatField()
-	ios = models.FloatField()
-	d2 = models.FloatField()
-	d3 = models.FloatField()
+	android = models.FloatField(default=0)
+	ios = models.FloatField(default=0)
+	d2 = models.FloatField(default=0)
+	d3 = models.FloatField(default=0)
 
 	@property
 	def diagram(self):
 		fig = plt.Figure()
-		labels = ['frontend', 'backend', 'management', 'blockchain']
-		values = [self.user.userrating.frontend, self.user.userrating.backend, self.user.userrating.management,
-				  self.user.userrating.blockchain]
+		labels = ['frontend', 'backend', 'ml', 'management', 'design', 'ar', 'blockchain', 'android', 'ios']
+		values = [self.user.userrating.frontend, self.user.userrating.backend, self.user.userrating.ml, self.user.userrating.management,
+				  self.user.userrating.design, self.user.userrating.ar, self.user.userrating.blockchain, self.user.userrating.android, self.user.userrating.ios]
 		N = len(labels)
 
 		x_as = [n / float(N) * 2 * pi for n in range(N)]
@@ -115,7 +115,7 @@ class UserRating(models.Model):
 		# Set number of radial axes and remove labels
 		plt.xticks(x_as[:-1], [])
 
-		plt.yticks([20, 40, 60, 80, 100], ["20", "40", "60", "80", "100"])
+		plt.yticks([5, 10, 15, 20], ["5", "10", "15", "20"])
 
 		# Plot data
 		ax.plot(x_as, values, linewidth=0, linestyle='solid', zorder=3)
@@ -124,7 +124,7 @@ class UserRating(models.Model):
 		ax.fill(x_as, values, 'b', alpha=0.3)
 
 		# Set axes limits
-		plt.ylim(0, 100)
+		plt.ylim(0, 20)
 
 		# Draw ytick labels to make sure they fit properly
 		for i in range(N):
@@ -139,7 +139,7 @@ class UserRating(models.Model):
 			else:
 				ha, distance_ax = "right", 1
 
-			ax.text(angle_rad, 100 + distance_ax, labels[i], size=10, horizontalalignment=ha,
+			ax.text(angle_rad, 20 + distance_ax, labels[i], size=10, horizontalalignment=ha,
 					verticalalignment="center")
 		url = 'media/dia'+ str(self.user.id) + '.jpg'
 		plt.savefig(url)
