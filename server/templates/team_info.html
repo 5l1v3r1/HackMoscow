@@ -2,11 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    
-    {% load static %}
-    <script src="{% static 'ajax_select/js/bootstrap.js' %}"></script>
-<script src="{% static 'ajax_select/js/ajax_select.js' %}"></script>
-<link rel="stylesheet" type="text/css" href="{% static 'ajax_select/css/ajax_select.css' %}">
     <title>Title</title>
 </head>
 <body>
@@ -14,17 +9,5 @@
     {% for user in users %}
         <tr>{{ user.username }}</tr>
     {% endfor %}
-
-    <form method="post">
-            {% csrf_token %}
-            {% for field in form %}
-            {{ field.label_tag }}<br>
-            {{field}}
-            {% for error in field.errors %}
-            <p style="color: red">{{ error }}</p>
-          {% endfor %}
-            {% endfor %}
-            <button type="submit">Search</button>
-    </form>
 </body>
 </html>

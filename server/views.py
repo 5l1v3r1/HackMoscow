@@ -4,15 +4,17 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, HttpResponse
 from server.forms import SignUpForm, LoginForm, CreateTeamForm
-from .models import Profile, Hackathon, Team, Skill, Tag
+from .models import Profile, Hackathon, Team, Skill
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404, HttpResponseRedirect
 
-from server.forms import SignUpForm, LoginForm, NewHackathonForm, ApplyToHack, SkillSearch
+from server.forms import SignUpForm, LoginForm, NewHackathonForm, ApplyToHack
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
 from django.forms.formsets import formset_factory
 from django.forms.models import model_to_dict
+
+
 
 
 @login_required
@@ -21,29 +23,25 @@ def user_info(request):
 		user = Profile.objects.get(user_id=request.user.id)
 		skills = user.skills.all()
 		user_hack_rating = 0
+		# endregion
 		for hack in user.user.hackathon_set.order_by('id'):
 			user_hack_rating += 10  # TODO: нормальный рейтинг
-
-		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills})
-
+		a = user.user.userrating
+		diag = 'media/dia'+ str(user.id+1) + '.jpg'
+		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills,
+												'diag':diag})
 
 
 @login_required
 # region Team
 def team_info(request, team_id):
-    '''provides information for team info page'''
-    if request.method == 'POST':
-        skills = request.POST.get('skills')
-        skill = Skill.objects.get(id=int(skills))
-        candidates = skill.profile_set.all()
-        print(candidates)
-    team = Team.objects.all().filter(id=team_id).first()
-    if team != None:
-        users = [user for user in team.users.all()]
-        form = SkillSearch()
-        return render(request, 'team_info.html', {'team': team, 'users': users, 'form':form})
-    else:
-        return HttpResponse("403")
+	'''provides information for team info page'''
+	team = Team.objects.all().filter(id=team_id).first()
+	if team != None:
+		users = [user for user in team.users.all()]
+		return render(request, 'team_info.html', {'team': team, 'users': users})
+	else:
+		return HttpResponse("403")
 
 
 @login_required
@@ -61,6 +59,7 @@ def create_team(request, hack_id):
 				team.save()
 				team.users.add(user)
 				team.save()
+				print(user.id)
 
 				return redirect('hack_info', hack_id=hack_id)
 
@@ -75,30 +74,40 @@ def create_team(request, hack_id):
 
 # endregion
 
+def hack_info(request, hack_id):
+	hack = Hackathon.objects.get(id=hack_id)
+	if hack != None:
+		return render(request, 'hack_info.html', {'hack': hack})
+	else:
+		return HttpResponse("404")
+
 
 # Create your views here.
 def signup(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST, request.FILES)
-        if form.is_valid():
-            user = form.save()
-            prof = Profile(user=user, name=form.cleaned_data.get('first_name'), surname=form.cleaned_data.get('last_name'), github=form.cleaned_data.get('github'), vk=form.cleaned_data.get('vk'), facebook=form.cleaned_data.get('facebook'),avatar=request.FILES['avatar'])
-            prof.save()
-            skills = request.POST.getlist('skills')
-            skills = skills[0].split('|')
-            if len(skills) != 2:
-                for i in skills:
-                    if i.isdigit():
-                        skill = Skill.objects.get(id=int(i))
-                        prof.skills.add(skill)
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            return HttpResponse("You did it!!!!")
-    else:
-        form = SignUpForm()
-    return render(request, 'signup.html', {'form': form})
+	if request.method == 'POST':
+		form = SignUpForm(request.POST, request.FILES)
+		if form.is_valid():
+			user = form.save()
+			prof = Profile(user=user, name=form.cleaned_data.get('first_name'),
+						   surname=form.cleaned_data.get('last_name'), github=form.cleaned_data.get('github'),
+						   vk=form.cleaned_data.get('vk'), facebook=form.cleaned_data.get('facebook'),
+						   avatar=request.FILES['avatar'])
+			prof.save()
+			skills = request.POST.getlist('skills')
+			skills = skills[0].split('|')
+			if len(skills) != 2:
+				for i in skills:
+					if i.isdigit():
+						skill = Skill.objects.get(id=int(i))
+						prof.skills.add(skill)
+			username = form.cleaned_data.get('username')
+			raw_password = form.cleaned_data.get('password1')
+			user = authenticate(username=username, password=raw_password)
+			login(request, user)
+			return HttpResponse("You did it!!!!")
+	else:
+		form = SignUpForm()
+	return render(request, 'registration.html', {'form': form})
 
 
 def signin(request):
@@ -125,33 +134,36 @@ def signin(request):
 
 '''View for new hackathons'''
 
+
 @login_required
 def new_hackathon(request):
-    if request.method == 'POST':
-        form = NewHackathonForm(request.POST)
-        if form.is_valid():
-            hackathon = form.save()
-            hackathon.refresh_from_db()
-            hackathon.save()
-            tags = request.POST.getlist('tags')
-            tags = tags[0].split('|')
-            if len(tags) != 2:
-                for i in tags:
-                    if i.isdigit():
-                        tag = Tag.objects.get(id=int(i))
-                        hackathon.tags.add(tag)
-            return redirect('hack_list')
-    else:
-        form = NewHackathonForm()
-    return render(request, 'new_hackathon.html', {'form': form})
+	if request.method == 'POST':
+		form = NewHackathonForm(request.POST)
+		if form.is_valid():
+			hackathon = form.save()
+			hackathon.refresh_from_db()
+			hackathon.save()
+			tags = request.POST.getlist('tags')
+			tags = tags[0].split('|')
+			if len(tags) != 2:
+				for i in tags:
+					if i.isdigit():
+						tag = Tag.objects.get(id=int(i))
+						hackathon.tags.add(tag)
+			return HttpResponse("Hackathon created!")
+	else:
+		form = NewHackathonForm()
+	return render(request, 'new_hackathon.html', {'form': form})
 
 
 def hackaton_list(request):
 	hackatons = Hackathon.objects.all()
+
 	return render(request, 'hackaton_list.html', {'hacks': hackatons})
 
 
 '''change hackathon view'''
+
 
 @login_required
 def change_hackathon(request, id):
@@ -191,10 +203,10 @@ def hack_info(request, hack_id):
 				break
 
 		return render(request, 'hack_info.html', {'hack': hack,
-													'user_id': user.id,
-													'is_user_applied': applied_users.count() != 0,
-					  								'user_has_team': users_team_in_hack is not None,
-													'users_team_in_hack': users_team_in_hack})
+												  'user_id': user.id,
+												  'is_user_applied': applied_users.count() != 0,
+												  'user_has_team': users_team_in_hack is not None,
+												  'users_team_in_hack': users_team_in_hack})
 	else:
 		return HttpResponse("Lol, who are you?")
 
@@ -206,4 +218,4 @@ def add_user_to_hack(request, hack_id, user_id):
 	user = get_object_or_404(User, id=user_id)
 	hack.users.add(user)
 
-	return redirect('hack_info', hack_id=hack_id)
+	return HttpResponse("You are added!")
