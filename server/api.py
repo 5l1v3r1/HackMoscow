@@ -1,11 +1,6 @@
 import os
-import datetime
-from json import dumps, loads
 
-import cv2
 import dlib
-import imutils
-import vptree
 import numpy as np
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
