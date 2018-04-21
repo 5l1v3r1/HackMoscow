@@ -9,6 +9,13 @@
     <h1>{{ hack.name }}</h1>
     <p>{{ hack.description }}</p>
     <p>{{ hack.date }}</p>
+    <p><i>Rating: </i>
+        {% if rating != -1 %}
+            {{ rating }}
+        {% else %}
+            Nothing
+        {% endif %}
+    </p>
     {% if not is_user_applied %}
     <input type="submit" value="Apply"
         onclick="window.location='{% url 'add_user_to_hack' hack.id user_id %}';" />

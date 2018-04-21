@@ -7,10 +7,12 @@
 <body>
 <h3>Профиль</h3>
 <img src="/media/{{user.avatar}}"/><br>
-<p>Рейтинг хакера: {{ user_hack_rating }}</p>
+<p>Рейтинг хакера: </p>
+<img src="{{ diag }}">
 <p>{{ user.name }} {{user.surname}}</p>
 {% for skill in skills %}
-<span>{{skill.name}}</span> <br>
+{{skill.name}} <br>
 {% endfor %}
+<img src="/{{chart}}"/><br>
 </body>
 </html>

@@ -8,6 +8,10 @@ from .models import Profile, Hackathon, Team, Skill, Tag, HackRateByUser
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404, HttpResponseRedirect
 
 from server.forms import SignUpForm, LoginForm, NewHackathonForm, ApplyToHack, ReviewForm
+from .models import Profile, Hackathon, Team, Skill, Tag, UserRating
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404, HttpResponseRedirect
+
+from server.forms import SignUpForm, LoginForm, NewHackathonForm, ApplyToHack, SkillSearch
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
@@ -23,20 +27,26 @@ def user_info(request):
 		user_hack_rating = 0
 		for hack in user.user.hackathon_set.order_by('id'):
 			user_hack_rating += 10  # TODO: нормальный рейтинг
-
-		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills})
+		rate = UserRating.objects.get(user_id=user.id)
+		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart':rate.diagram})
 
 
 @login_required
 # region Team
 def team_info(request, team_id):
-	'''provides information for team info page'''
-	team = Team.objects.all().filter(id=team_id).first()
-	if team != None:
-		users = [user for user in team.users.all()]
-		return render(request, 'team_info.html', {'team': team, 'users': users})
-	else:
-		return HttpResponse("403")
+    '''provides information for team info page'''
+    if request.method == 'POST':
+        skills = request.POST.get('skills')
+        skill = Skill.objects.get(id=int(skills))
+        candidates = skill.profile_set.all()
+        print(candidates)
+    team = Team.objects.all().filter(id=team_id).first()
+    if team != None:
+        users = [user for user in team.users.all()]
+        form = SkillSearch()
+        return render(request, 'team_info.html', {'team': team, 'users': users, 'form':form})
+    else:
+        return HttpResponse("403")
 
 
 @login_required
@@ -54,7 +64,6 @@ def create_team(request, hack_id):
 				team.save()
 				team.users.add(user)
 				team.save()
-				print(user.id)
 
 				return redirect('hack_info', hack_id=hack_id)
 
@@ -125,23 +134,24 @@ def signin(request):
 
 @login_required
 def new_hackathon(request):
-	if request.method == 'POST':
-		form = NewHackathonForm(request.POST)
-		if form.is_valid():
-			hackathon = form.save()
-			hackathon.refresh_from_db()
-			hackathon.save()
-			tags = request.POST.getlist('tags')
-			tags = tags[0].split('|')
-			if len(tags) != 2:
-				for i in tags:
-					if i.isdigit():
-						tag = Tag.objects.get(id=int(i))
-						hackathon.tags.add(tag)
-			return HttpResponse("Hackathon created!")
-	else:
-		form = NewHackathonForm()
-	return render(request, 'new_hackathon.html', {'form': form})
+    if request.method == 'POST':
+        form = NewHackathonForm(request.POST)
+        if form.is_valid():
+            hackathon = form.save()
+            hackathon.refresh_from_db()
+            hackathon.save()
+            tags = request.POST.getlist('tags')
+            tags = tags[0].split('|')
+            if len(tags) != 2:
+                for i in tags:
+                    if i.isdigit():
+                        tag = Tag.objects.get(id=int(i))
+                        hackathon.tags.add(tag)
+            return redirect('hack_list')
+    else:
+        form = NewHackathonForm()
+    return render(request, 'new_hackathon.html', {'form': form})
+
 
 
 def hackaton_list(request):
@@ -190,6 +200,17 @@ def hack_info(request, hack_id):
 
 	rate = HackRateByUser.objects.filter(hack_id=hack_id).filter(user_id=user.id).first()
 
+	rating = 0
+	cnt = 0
+	for user_rate in HackRateByUser.objects.filter(hack_id=hack_id):
+		cnt += 1
+		rating += int(user_rate.rate)
+
+	if cnt != 0:
+		rating /= cnt
+	else:
+		rating = -1
+
 	if request.method == 'POST':
 		form = ReviewForm(request.POST)
 		if form.is_valid():
@@ -211,7 +232,8 @@ def hack_info(request, hack_id):
 											  'can_review': applied_users.count() != 0,
 											  'review_form': form,
 											  'has_rate': rate is not None,
-											  'rate': rate})
+											  'rate': rate,
+											  'rating': rating})
 
 
 @login_required
@@ -221,4 +243,4 @@ def add_user_to_hack(request, hack_id, user_id):
 	user = get_object_or_404(User, id=user_id)
 	hack.users.add(user)
 
-	return HttpResponse("You are added!")
+	return redirect('hack_info', hack_id=hack_id)
