@@ -22,7 +22,6 @@ class Profile(models.Model):
 	vk = models.CharField(max_length=100)
 	skills = models.ManyToManyField(Skill)
 
-
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):
 	if created:
@@ -33,9 +32,10 @@ def update_user_profile(sender, instance, created, **kwargs):
 class Hackathon(models.Model):
 	'''model for hackathon'''
 	name = models.CharField(max_length=300)
-	description = models.CharField(max_length=5000)
+	description = models.CharField(max_length=5000, default="")
 	date = models.DateField()
 	duration = models.DateTimeField()
+	users = models.ManyToManyField(User)
 
 
 class News(models.Model):
@@ -49,3 +49,9 @@ class Invintation(models.Model):
 	to_Profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='to_Profile')
 	hackathon = models.ForeignKey(Hackathon, on_delete=models.CASCADE, related_name='hackathon')
 	date = models.DateField(auto_now=True)
+
+class Team(models.Model):
+	'''class for team'''
+	name = models.CharField(max_length=100)
+	users = models.ManyToManyField(User)
+	hackathones = models.ManyToManyField(Hackathon)
