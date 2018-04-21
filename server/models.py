@@ -81,7 +81,7 @@ class UserRating(models.Model):
 	design = models.FloatField()
 	ar = models.FloatField()
 	blockchain = models.FloatField()
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	user = models.OneToOneField(Profile, on_delete=models.CASCADE)
 	android = models.FloatField()
 	ios = models.FloatField()
 	d2 = models.FloatField()

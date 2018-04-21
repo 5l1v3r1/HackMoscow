@@ -4,7 +4,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, HttpResponse
 from server.forms import SignUpForm, LoginForm, CreateTeamForm
-from .models import Profile, Hackathon, Team, Skill, Tag
+from .models import Profile, Hackathon, Team, Skill, Tag, UserRating
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404, HttpResponseRedirect
 
 from server.forms import SignUpForm, LoginForm, NewHackathonForm, ApplyToHack, SkillSearch
@@ -23,8 +23,8 @@ def user_info(request):
 		user_hack_rating = 0
 		for hack in user.user.hackathon_set.order_by('id'):
 			user_hack_rating += 10  # TODO: нормальный рейтинг
-
-		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills})
+		rate = UserRating.objects.get(user_id=user.id)
+		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart':rate.diagram})
 
 
 
