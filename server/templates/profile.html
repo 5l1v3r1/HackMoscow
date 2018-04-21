@@ -9,5 +9,9 @@
 <img src="/media/{{user.avatar}}"/><br>
 {{ user.name }} {{user.surname}}
 <p>Рейтинг хакера: {{ user_hack_rating }}</p>
+<p>{{ user.name }} {{user.surname}}</p>
+{% for skill in skills %}
+{{skill.name}}
+{% endfor %}
 </body>
 </html>

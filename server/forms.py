@@ -16,7 +16,7 @@ class SignUpForm(UserCreationForm):
 	vk = forms.CharField(max_length=100, required=True)
 	facebook = forms.CharField(max_length=100, required=True)
 	email = forms.EmailField(max_length=254)
-
+	skills = AutoCompleteSelectMultipleField('skills')
 	class Meta:
 		model = User
 		fields = ('username', 'first_name', 'last_name', 'avatar', 'email', 'password1', 'password2', 'github', 'vk', 'facebook')
@@ -47,17 +47,15 @@ class ApplyToHack(ModelForm):
 
 
 class NewHackathonForm(forms.ModelForm):
-	#tags = make_ajax_field(Hackathon, 'tags', 'tags', required=True, show_help_text=False, help_text='Теги')
+	
 	class Meta:
 		model = Hackathon
-		fields = ['name', 'description', 'max_members', 'date', 'duration']
-		# widgets = {
-        #     'tags': forms.TextInput(attrs={'placeholder': 'Теги'}),
-        # }
+		fields = ['name', 'description', 'max_members', 'date', 'duration', 'tags']
 
 	def __init__(self, *args, **kwargs):
 		super(NewHackathonForm, self).__init__(*args, **kwargs)
 		self.fields['date'].widget = forms.DateInput(format='%d/%m/%y')
+		self.fields['tags'] = AutoCompleteSelectMultipleField('tags')
 
 
 class CreateTeamForm(forms.Form):
