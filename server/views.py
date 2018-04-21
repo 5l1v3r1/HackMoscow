@@ -17,7 +17,10 @@ from django.contrib.auth.decorators import login_required
 
 from django.forms.formsets import formset_factory
 from django.forms.models import model_to_dict
-
+from . import api
+import numpy as np
+import cv2
+from skimage.color import rgb2gray, gray2rgb
 
 @login_required
 def user_info(request):
@@ -262,3 +265,15 @@ def add_user_to_team(request, team_id, user_id):
 		user = get_object_or_404(User, id=user_id)
 		team.users.add(user)
 	return redirect('teams', hack_id=team_id)
+
+
+def data(request):
+	frame = request.FILES['frame']
+	img = gray2rgb(cv2.imdecode(np.fromstring(frame.read(), np.uint8), 0))
+	people = api.check_people(img)
+	print(people)
+	return HttpResponse("<p>{0}</p>".format(str(people)))
+
+
+def counter(request):
+	return render(request, 'peoplecounter.html')

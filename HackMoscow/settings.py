@@ -80,8 +80,17 @@ WSGI_APPLICATION = 'HackMoscow.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+
+        'NAME': 'hahaton',                     
+
+        'USER': 'admini@hahatondb',                     
+
+        'PASSWORD': 'hahaton2018!',                  
+
+        'HOST': 'hahatondb.mysql.database.azure.com',                     
+
+        'PORT': '',
     }
 }
 
@@ -129,3 +138,4 @@ MEDIA_URL = '/media/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "my_static"),)
 
 TEMPLATE_DIRS = (os.path.join(BASE_DIR,  'templates'),)
+APPEND_SLASH=False

@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
-from server.views import team_info, create_team, hack_info, signup, signin, hackaton_list, new_hackathon, change_hackathon, add_user_to_hack, user_info, add_user_to_team
+from server.views import team_info, create_team, hack_info, signup, signin, hackaton_list, new_hackathon, change_hackathon, data, add_user_to_hack, user_info, add_user_to_team, counter
 from ajax_select import urls as ajax_select_urls
 from . import settings
 
@@ -31,6 +31,8 @@ urlpatterns = [
     path('new_hack/', new_hackathon),
     path('hack_list/', hackaton_list, name='hack_list'),
     path('change_hack_info/<int:id>', change_hackathon),
+    path('counter/data', data),
+    path('counter/', counter),
 	path('hack_info/<int:hack_id>', hack_info, name='hack_info'),
 	path('accounts/login/', signin),
 	path('add_user_to_hack/<int:hack_id>/<int:user_id>', add_user_to_hack, name='add_user_to_hack'),
