@@ -54,12 +54,12 @@ class NewHackathonForm(forms.ModelForm):
 
 class CreateTeamForm(forms.Form):
 	name = forms.CharField(max_length=100, required=True)
-	participant1 = forms.CharField(max_length=50, widget=forms.TextInput(attrs={
-		'placeholder': 'username',
-	}), required=True)
-	participant2 = forms.CharField(max_length=50, widget=forms.TextInput(attrs={
-		'placeholder': 'username',
-	}), required=True)
-	participant3 = forms.CharField(max_length=50, widget=forms.TextInput(attrs={
-		'placeholder': 'username',
-	}), required=True)
+	#participant1 = forms.CharField(max_length=50, widget=forms.TextInput(attrs={
+#		'placeholder': 'username',
+#	}), required=True)
+#	participant2 = forms.CharField(max_length=50, widget=forms.TextInput(attrs={
+#		'placeholder': 'username',
+#	}), required=True)
+#	participant3 = forms.CharField(max_length=50, widget=forms.TextInput(attrs={
+#		'placeholder': 'username',
+#	}), required=True)

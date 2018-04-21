@@ -5,7 +5,9 @@
     <title>Create team</title>
 </head>
 <body>
+    <p>{{ user.username }}, create your team! </p>
     <form method="post">
+    <p>Create team at {{ hack.name}}</p>
         {% csrf_token %}
         {% for field in form %}
           <p>
@@ -17,7 +19,9 @@
             {% endfor %}
           </p>
         {% endfor %}
-        <button type="submit">Create team</button>
+        <input type="submit" value="Create team"/>
       </form>
+
+
 </body>
 </html>

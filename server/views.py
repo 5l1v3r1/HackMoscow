@@ -31,34 +31,36 @@ def team_info(request, team_id):
 	else:
 		return HttpResponse("403")
 
+
 @login_required
-def create_team(request):
+def create_team(request, hack_id):
 	'''creates team'''
+	hack = get_object_or_404(Hackathon, id=hack_id)
+	user = get_object_or_404(User, username=request.user.username)
 	if request.method == 'POST':
 		team_form = CreateTeamForm(request.POST)
 		if team_form.is_valid():
 			try:
 				team = Team.objects.create()
 				team.name = team_form.cleaned_data.get('name')
-				for i in range(3):
-					form_username = team_form.cleaned_data.get('participant' + (str)(i + 1))
-					user = User.objects.all().filter(username=form_username).first()
-					if user != None:
-						team.users.add(user)
-					else:
-						return HttpResponse("403")
+				team.hackathones.add(hack)
 				team.save()
+				team.users.add(user)
+				team.save()
+				print(user.id)
+
+				return redirect('hack_info', hack_id=hack_id)
+
 			except Exception as e:
 				print(e)
 				return HttpResponse("403")
 
 	else:
 		team_form = CreateTeamForm()
-	return render(request, 'create_team.html', {'form': team_form})
+	return render(request, 'create_team.html', {'form': team_form, 'hack': hack, 'user': user})
 
 
 # endregion
-
 
 
 # Create your views here.
@@ -100,9 +102,9 @@ def signin(request):
 	return render(request, 'login.html', {'form': form})
 
 
-
-
 '''View for new hackathons'''
+
+
 def new_hackathon(request):
 	if request.method == 'POST':
 		form = NewHackathonForm(request.POST)
@@ -144,12 +146,26 @@ def change_hackathon(request, id):
 	return render(request, 'change_hack_info.html', {'form': form})
 
 
+# information about hack
 def hack_info(request, hack_id):
 	hack = get_object_or_404(Hackathon, id=hack_id)
 
 	if request.user.username != "":
 		user = get_object_or_404(User, username=request.user.username)
-		return render(request, 'hack_info.html', {'hack': hack, 'user_id': user.id})
+		applied_users = hack.users.filter(id=user.id)
+
+		users_team_in_hack = None
+
+		for team in user.team_set.order_by('id'):
+			if team.hackathones.filter(id=hack.id).count() > 0:
+				users_team_in_hack = team
+				break
+
+		return render(request, 'hack_info.html', {'hack': hack,
+													'user_id': user.id,
+													'is_user_applied': applied_users.count() != 0,
+					  								'user_has_team': users_team_in_hack is not None,
+													'users_team_in_hack': users_team_in_hack})
 	else:
 		return HttpResponse("Lol, who are you?")
 
