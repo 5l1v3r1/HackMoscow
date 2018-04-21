@@ -11,7 +11,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
 from django.forms.formsets import formset_factory
-from server.models import Hackathon
 from django.forms.models import model_to_dict
 
 
@@ -69,8 +68,8 @@ def signup(request):
 		form = SignUpForm(request.POST)
 		if form.is_valid():
 			user = form.save()
-			user.refresh_from_db()
-			user.save()
+			prof = Profile(user=user, name=form.cleaned_data.get('first_name'), surname=form.cleaned_data.get('last_name'), github=form.cleaned_data.get('github'), vk=form.cleaned_data.get('vk'), facebook=form.cleaned_data.get('facebook'))
+			prof.save()
 			username = form.cleaned_data.get('username')
 			raw_password = form.cleaned_data.get('password1')
 			user = authenticate(username=username, password=raw_password)

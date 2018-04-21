@@ -48,9 +48,6 @@ class NewHackathonForm(forms.ModelForm):
 		super(NewHackathonForm, self).__init__(*args, **kwargs)
 		self.fields['date'].widget = forms.DateInput(format='%d/%m/%y')
 
-		username = forms.CharField(max_length=254, required=True)
-		password = forms.CharField(widget=forms.PasswordInput())
-
 
 class CreateTeamForm(forms.Form):
 	name = forms.CharField(max_length=100, required=True)
