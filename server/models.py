@@ -10,9 +10,17 @@ class Skill(models.Model):
 	name = models.CharField(max_length=500)
 
 
+class Tag(models.Model):
+	'''model for hackathon tags '''
+	tagname = models.CharField(max_length=30, default="[Undefinded]")
+	def __str__(self):
+		return self.tagname
+
+
 class Profile(models.Model):
 	'''model for Profile'''
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	avatar = models.ImageField(upload_to='uploads/', default = 'unknown_img.jpg')
 	access_level = models.IntegerField(
 		default=0, verbose_name='Уровень доступа')
 	birthday = models.DateField(auto_now=True)
@@ -23,12 +31,6 @@ class Profile(models.Model):
 	vk = models.CharField(max_length=100)
 	skills = models.ManyToManyField(Skill)
 
-@receiver(post_save, sender=User)
-def update_user_profile(sender, instance, created, **kwargs):
-	if created:
-		Profile.objects.create(user=instance)
-	instance.profile.save()
-
 
 class Hackathon(models.Model):
 	'''model for hackathon'''
@@ -38,6 +40,7 @@ class Hackathon(models.Model):
 	users = models.ManyToManyField(User)
 	duration = models.IntegerField(validators=[MinValueValidator(1), ])
 	max_members = models.IntegerField(validators=[MinValueValidator(1), ])
+	tags = models.ManyToManyField(Tag, related_name="tags", verbose_name='Теги')
 
 	@property
 	def hack_url(self):
@@ -56,8 +59,17 @@ class Invintation(models.Model):
 	hackathon = models.ForeignKey(Hackathon, on_delete=models.CASCADE, related_name='hackathon')
 	date = models.DateField(auto_now=True)
 
+
 class Team(models.Model):
 	'''class for team'''
 	name = models.CharField(max_length=100)
 	users = models.ManyToManyField(User)
 	hackathones = models.ManyToManyField(Hackathon)
+
+
+class Achievement(models.Model):
+	'''class fot achievement'''
+	user = models.ManyToManyField(Profile)
+	receiving_date = models.DateTimeField()
+	image = models.ImageField()
+	info = models.CharField(max_length=1000)
