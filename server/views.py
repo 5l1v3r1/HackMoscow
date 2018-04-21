@@ -129,24 +129,6 @@ def signin(request):
 		form = LoginForm()
 	return render(request, 'login.html', {'form': form})
 
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            try:
-                username = form.cleaned_data.get('username')
-                raw_password = form.cleaned_data.get('password')
-                user = authenticate(username=username, password=raw_password)
-                if user:
-                    login(request, user)
-                    return HttpResponse("200")
-                else:
-                    return HttpResponse("403")
-            except Exception as e:
-                print(e)
-                return HttpResponse("403")
-    else:
-        form = LoginForm()
-    return render(request, 'login.html', {'form': form})
 
 
 
