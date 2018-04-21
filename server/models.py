@@ -35,14 +35,13 @@ class Hackathon(models.Model):
 	name = models.CharField(max_length=300)
 	description = models.CharField(max_length=5000, default="")
 	date = models.DateField()
-	duration = models.DateTimeField()
 	users = models.ManyToManyField(User)
 	duration = models.IntegerField(validators=[MinValueValidator(1), ])
 	max_members = models.IntegerField(validators=[MinValueValidator(1), ])
 
 	@property
 	def hack_url(self):
-		return "/h{0}".format(self.id)
+		return "/hack_info/{0}".format(self.id)
 
 
 class News(models.Model):

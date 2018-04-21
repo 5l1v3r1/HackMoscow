@@ -110,7 +110,7 @@ def signin(request):
 
 
 
-
+'''View for new hackathons'''
 def new_hackathon(request):
 	if request.method == 'POST':
 		form = NewHackathonForm(request.POST)
@@ -127,14 +127,6 @@ def new_hackathon(request):
 def hackaton_list(request):
 	hackatons = Hackathon.objects.all()
 	return render(request, 'hackaton_list.html', {'hacks': hackatons})
-
-
-def hackathon_page(request, id):
-	try:
-		hack = Hackathon.objects.get(id=id)
-		return render(request, 'hackaton', {'hack': hack})
-	except:
-		return HttpResponse("404")
 
 
 '''change hackathon view'''
@@ -158,3 +150,22 @@ def change_hackathon(request, id):
 	else:
 		form = NewHackathonForm(instance=hackaton)
 	return render(request, 'change_hack_info.html', {'form': form})
+
+
+def hack_info(request, hack_id):
+	hack = get_object_or_404(Hackathon, id=hack_id)
+
+	if request.user.username != "":
+		user = get_object_or_404(User, username=request.user.username)
+		return render(request, 'hack_info.html', {'hack': hack, 'user_id': user.id})
+	else:
+		return HttpResponse("Lol, who are you?")
+
+
+# adds user to hackathon
+def add_user_to_hack(request, hack_id, user_id):
+	hack = get_object_or_404(Hackathon, id=hack_id)
+	user = get_object_or_404(User, id=user_id)
+	hack.users.add(user)
+
+	return HttpResponse("You are added!")
