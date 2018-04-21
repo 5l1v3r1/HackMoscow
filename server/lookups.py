@@ -6,17 +6,18 @@ class TagsLookup(LookupChannel):
 
     model = Tag
 
+    def check_auth(self, request):
+        return True
+
     def get_query(self, q, request):
-        v = self.model.objects.filter(tagname__icontains=q.capitalize()).order_by('tagname')[:50]
+        print(q)
+        v = self.model.objects.filter(tagname__icontains=q.capitalize())
         if len(v) == 0:
-            v = self.model.objects.all().order_by('tagname')[:50]
+            v = self.model.objects.all().order_by('tagname')
         return v
 
     def format_match(self, item):
         return item.tagname
 
     def format_item_display(self, item):
-        return u"<span class='tag'>%s</span>" % item.tagname
-
-    def check_auth(self, request):
-        return request.user.is_authenticated()
+        return item.tagname

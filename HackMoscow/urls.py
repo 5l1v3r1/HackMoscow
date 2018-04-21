@@ -14,12 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf.urls.static import static
 from server.views import team_info, create_team, hack_info, signup, signin, hackaton_list, new_hackathon, change_hackathon, add_user_to_hack, user_info
+from ajax_select import urls as ajax_select_urls
 from . import settings
 
 urlpatterns = [
+    path(r'^admin/lookups/', include(ajax_select_urls)),
     path('admin/', admin.site.urls),
     path('signup/', signup),
     path('teams/<int:team_id>', team_info),

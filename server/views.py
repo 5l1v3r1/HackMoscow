@@ -113,6 +113,13 @@ def new_hackathon(request):
 			hackathon = form.save()
 			hackathon.refresh_from_db()
 			hackathon.save()
+            tags = request.POST.getlist('tags')
+            tags = tags[0].split('|')
+            if len(tags) != 2:
+                for i in tags:
+                    if i.isdigit():
+                        tag = Tag.objects.get(id=int(i))
+                        hackathon.tags.add(tag)
 			return HttpResponse("Hackathon created!")
 	else:
 		form = NewHackathonForm()
