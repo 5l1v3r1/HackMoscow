@@ -2,8 +2,9 @@
     <head></head>
 <body>
 {% if hacks %}
-{% for h in hacks %}
-    <a href={{h.hack_url}}>{{h.name}}</a>
+{% for hack in hacks %}
+    <li><a href="/hack_info/{{ hack.id }}">{{ hack.name }}</a></li>
+
 {% endfor %}
 {% else %}
 Хакатонов нет
