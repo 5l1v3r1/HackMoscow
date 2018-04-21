@@ -126,6 +126,7 @@ def new_hackathon(request):
 
 def hackaton_list(request):
 	hackatons = Hackathon.objects.all()
+
 	return render(request, 'hackaton_list.html', {'hacks': hackatons})
 
 
