@@ -42,12 +42,16 @@ def team_info(request, team_id):
     if request.method == 'POST':
         skills = request.POST.get('skills')
         skill = Skill.objects.get(id=int(skills))
-        candidates = skill.profile_set.all()
-        print(candidates)
+        candidates = skill.profile_set.all().exclude(user_id=request.user.id)[:5]
     team = Team.objects.all().filter(id=team_id).first()
     if team != None:
         users = [user for user in team.users.all()]
         form = SkillSearch()
+        if request.method == 'POST':
+            skills = request.POST.get('skills')
+            skill = Skill.objects.get(id=int(skills))
+            candidates = skill.profile_set.all().exclude(user_id=request.user.id)[:5]
+            return render(request, 'team_info.html', {'team': team, 'users': users, 'form':form, 'candidates':candidates})
         return render(request, 'team_info.html', {'team': team, 'users': users, 'form':form})
     else:
         return HttpResponse("403")
@@ -242,7 +246,7 @@ def hack_info(request, hack_id):
 											  'rating': rating})
 
 
-@login_required
+
 # adds user to hackathon
 def add_user_to_hack(request, hack_id, user_id):
 	hack = get_object_or_404(Hackathon, id=hack_id)
@@ -250,3 +254,13 @@ def add_user_to_hack(request, hack_id, user_id):
 	hack.users.add(user)
 
 	return redirect('hack_info', hack_id=hack_id)
+
+
+def add_user_to_team(request, team_id, user_id):
+	if request.method == 'POST':
+		team = get_object_or_404(Team, id=team_id)
+		user = get_object_or_404(User, id=user_id)
+		team.users.add(user)
+		return redirect('teams', hack_id=team_id)
+	else:
+		return redirect('teams', hack_id=team_id)
