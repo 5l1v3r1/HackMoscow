@@ -1,9 +1,12 @@
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from server.forms import SignUpForm, LoginForm, NewHackathonForm
 from django.contrib.auth.models import User
 from server.models import Hackathon
+from django.forms.models import model_to_dict
+
+
 # Create your views here.
 def signup(request):
     if request.method == 'POST':
@@ -70,5 +73,30 @@ def hackathon_page(request, id):
         return render(request, 'hackaton', {'hack':hack} )
     except:
         return HttpResponse("404")
+
+
+'''change hackathon view'''
+def change_hackathon(request, id):
+    hackaton = get_object_or_404(Hackathon, id=id)
+    if request.method == 'POST':
+        form = NewHackathonForm(request.POST)
+        if form.is_valid():
+            tmp = form.instance
+            hackaton.date = tmp.date
+            hackaton.name = tmp.name
+            hackaton.description = tmp.description
+            hackaton.duration = tmp.duration
+            hackaton.max_members = tmp.max_members
+
+            hackaton.save()
+
+            return HttpResponse("Changes saved!")
+    else:
+        form = NewHackathonForm(instance=hackaton)
+    return render(request, 'change_hack_info.html', {'form': form})
+
+
+
+
     
 

@@ -34,3 +34,4 @@ class NewHackathonForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(NewHackathonForm, self).__init__(*args, **kwargs)
         self.fields['date'].widget = forms.DateInput(format='%d/%m/%y')
+
