@@ -3,7 +3,7 @@
 <body>
 {% if hacks %}
 {% for hack in hacks %}
-    <li><a href="/{{ hack.url }}">{{ hack.name }}</a></li>
+    <li><a href="{% url 'hack_info' hack.id %}">{{ hack.name }}</a></li>
 
 {% endfor %}
 {% else %}

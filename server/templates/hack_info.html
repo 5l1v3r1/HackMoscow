@@ -22,9 +22,15 @@
                 </p>
             {% endfor %}
         </form>
+{% if not is_user_applied %}
 <input type="submit" value="Apply"
     onclick="window.location='{% url 'add_user_to_hack' hack.id user_id %}';" />
-
+    {% elif user_has_team %}
+    <p>You are applied! And you are at team {{ users_team_in_hack.name }}</p>
+{% else %}
+<input type="submit" value="Create team"
+    onclick="window.location='{% url 'create_team' hack.id %}';" />
+{% endif %}
 </div>
 </body>
 </html>
