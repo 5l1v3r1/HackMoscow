@@ -6,31 +6,50 @@
 </head>
 <body>
 <div>
-    <p>{{ hack.name }}</p>
+    <h1>{{ hack.name }}</h1>
     <p>{{ hack.description }}</p>
     <p>{{ hack.date }}</p>
+    {% if not is_user_applied %}
+    <input type="submit" value="Apply"
+        onclick="window.location='{% url 'add_user_to_hack' hack.id user_id %}';" />
+    {% elif user_has_team %}
+        <p>You are applied! And you are at team {{ users_team_in_hack.name }}</p>
+        {% if not has_rate %}
+            <input type="button" value="review" onclick="reviewShowOnClick()">
+        {% endif %}
+    {% else %}
+        <input type="submit" value="Create team"
+        onclick="window.location='{% url 'create_team' hack.id %}';" />
+    {% endif %}
+
+    {% if  has_rate %}
+        <p><b>You rate: </b> {{ rate.rate }}</p>
+        <p><b>You comment: </b>{{ rate.comment }}</p>
+    {% else %}
+    <div style="visibility: hidden" id="review">
+
         <form method="post">
             {% csrf_token %}
-            {% for field in form %}
-                <p>
-                    {{ field.label_tag }}<br>
-                    {{ field }}
 
-                    {% for error in field.errors %}
-                        <p style="color: red">{{ error }}</p>
-                    {% endfor %}
-                </p>
+            {% if can_review %}
+            {% for field in review_form %}
+                <p>{{ field.label_tag }} {{field}} </p>
             {% endfor %}
+                <input type="submit" value="Comment"/>
+            {% else %}
+                 <p style="color: red">You're can't vote!</p>
+            {% endif %}
         </form>
-{% if not is_user_applied %}
-<input type="submit" value="Apply"
-    onclick="window.location='{% url 'add_user_to_hack' hack.id user_id %}';" />
-    {% elif user_has_team %}
-    <p>You are applied! And you are at team {{ users_team_in_hack.name }}</p>
-{% else %}
-<input type="submit" value="Create team"
-    onclick="window.location='{% url 'create_team' hack.id %}';" />
-{% endif %}
+        <p>Hello!</p>
+    </div>
+
+    <script>
+        function reviewShowOnClick() {
+            document.getElementById("review").style.visibility = "visible";
+            //alert("kek!");
+        }
+    </script>
+    {% endif %}
 </div>
 </body>
 </html>

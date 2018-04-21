@@ -77,7 +77,9 @@ class Achievement(models.Model):
 
 class HackRateByUser(models.Model):
 	'''model for rates by User'''
-	user = models.OneToOneField(Profile, on_delete=models.CASCADE)
-	hack = models.OneToOneField(Hackathon, on_delete=models.CASCADE)
+	user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+	hack = models.ForeignKey(Hackathon, on_delete=models.CASCADE)
 	rate = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
 	comment = models.CharField(max_length=1000)
+
+

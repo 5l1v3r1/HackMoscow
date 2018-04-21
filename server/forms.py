@@ -4,9 +4,10 @@ from django.contrib.auth.models import User
 from django.contrib.admin import widgets
 from django.forms.formsets import BaseFormSet
 from django.forms import ModelForm
-from .models import Hackathon, Tag
+from .models import Hackathon, Tag, HackRateByUser
 from ajax_select.fields import AutoCompleteSelectMultipleField
 from ajax_select import make_ajax_field
+from django.forms import models
 
 class SignUpForm(UserCreationForm):
 	first_name = forms.CharField(max_length=30, required=True)
@@ -69,3 +70,19 @@ class CreateTeamForm(forms.Form):
 #	participant3 = forms.CharField(max_length=50, widget=forms.TextInput(attrs={
 #		'placeholder': 'username',
 #	}), required=True)
+
+
+RATING_CHOICES = (
+	(1, 'Very bad'),
+	(2, 'Bad'),
+	(3, 'Medium'),
+	(4, 'Good'),
+	(5, 'Perfect')
+)
+
+
+class ReviewForm(forms.ModelForm):
+	class Meta:
+		model = HackRateByUser
+		fields = ['rate', 'comment']
+
