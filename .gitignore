@@ -58,3 +58,8 @@ docs/_build/
 target/
 # idea
 .idea/
+
+# static
+static/
+
+db.sqlite3

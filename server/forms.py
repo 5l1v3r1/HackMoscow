@@ -26,6 +26,11 @@ class LoginForm(forms.Form):
 	username = forms.CharField(max_length=254, required=True)
 	password = forms.CharField(widget=forms.PasswordInput())
 
+	def __init__(self, *args, **kwargs):
+		super(LoginForm, self).__init__(*args, **kwargs)
+		self.fields['username'].widget.attrs.update({'class': 'singIn-input'})
+		self.fields['password'].widget.attrs.update({'class': 'singIn-input'})
+
 class ApplyToHack(ModelForm):
 	hack = forms.HiddenInput
 	class Meta:

@@ -18,7 +18,12 @@ from django.forms.models import model_to_dict
 def user_info(request):
 	if request.method == 'GET':
 		user = Profile.objects.get(user_id=request.user.id)
-		return render(request, 'profile.html', {'user':user})
+
+		user_hack_rating = 0
+		for hack in user.user.hackathon_set.order_by('id'):
+			user_hack_rating += 10  # TODO: нормальный рейтинг
+
+		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating})
 
 
 # region Team
