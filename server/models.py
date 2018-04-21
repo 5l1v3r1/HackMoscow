@@ -33,6 +33,7 @@ def update_user_profile(sender, instance, created, **kwargs):
 class Hackathon(models.Model):
 	'''model for hackathon'''
 	name = models.CharField(max_length=300)
+	description = models.CharField(max_length=5000)
 	date = models.DateField()
 	duration = models.DateTimeField()
 
