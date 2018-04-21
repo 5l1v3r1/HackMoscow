@@ -34,7 +34,9 @@ def team_info(request, team_id):
     '''provides information for team info page'''
     if request.method == 'POST':
         skills = request.POST.get('skills')
-        print(skills)
+        skill = Skill.objects.get(id=int(skills))
+        candidates = skill.profile_set.all()
+        print(candidates)
     team = Team.objects.all().filter(id=team_id).first()
     if team != None:
         users = [user for user in team.users.all()]
