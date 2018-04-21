@@ -64,11 +64,6 @@
                                 {% endfor %}
 							</div>
                             <div class="levelInfo ds-broad">
-                                {%  if chart %}
-                                    <img src="/{{chart}}"/><br>
-                                {% else %}
-                                    Nothing diagrams.
-                                {%  endif %}
                                 <p>Hacker's rating:
                                     {% if user_hack_rating > 0 %}
                                         {{ user_hack_rating }}
@@ -76,6 +71,12 @@
                                     <i>Nothing rating</i>
                                     {% endif %}
                                 </p>
+                                {%  if chart %}
+                                    <img src="/{{chart}}"/><br>
+                                {% else %}
+                                    Nothing diagrams.
+                                {%  endif %}
+
 						    </div>
 
 						</div>

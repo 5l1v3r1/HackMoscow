@@ -42,11 +42,11 @@ def other_user(request, user_id):
 		skills = user.skills.all()
 		user_hack_rating = get_user_rating(user)
 
-		#try:
-		rate = UserRating.objects.get(user_id=user.id)
-		diagram = rate.diagram
-		#except:
-		#	diagram = None
+		try:
+			rate = UserRating.objects.get(user_id=user.id)
+			diagram = rate.diagram
+		except:
+			diagram = None
 		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart': diagram})
 
 
