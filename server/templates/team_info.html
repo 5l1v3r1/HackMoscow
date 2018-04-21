@@ -2,12 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    
+    {% load static %}
+    <script src="{% static 'ajax_select/js/bootstrap.js' %}"></script>
+<script src="{% static 'ajax_select/js/ajax_select.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'ajax_select/css/ajax_select.css' %}">
     <title>Title</title>
 </head>
 <body>
-    {{ team.name }}
+    <p>{{ team.name }}</p>
     {% for user in users %}
-        <tr>{{ user.username }}</tr>
+        <tr>{{ user.username }}</tr> <br>
     {% endfor %}
+<br>
+    <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            {{ field.label_tag }}<br>
+            {{field}}
+            {% for error in field.errors %}
+            <p style="color: red">{{ error }}</p>
+          {% endfor %}
+            {% endfor %}
+            <button type="submit">Search</button>
+    </form>
+    {% if candidates %}
+    <p>
+        {% for can in candidates %}
+            <form method="post" action="/add_user_to_team/{{team.id}}/{{can.user_id}}">
+            {% csrf_token %}
+            {{can.name}} {{can.surname}} <button type="submit">Добавить</button> <br>
+        </form>
+        {% endfor %}
+    </p>
+    {% endif %}
 </body>
 </html>

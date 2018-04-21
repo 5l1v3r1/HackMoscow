@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -81,7 +81,7 @@ class UserRating(models.Model):
 	design = models.FloatField()
 	ar = models.FloatField()
 	blockchain = models.FloatField()
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	user = models.OneToOneField(Profile, on_delete=models.CASCADE)
 	android = models.FloatField()
 	ios = models.FloatField()
 	d2 = models.FloatField()
@@ -152,3 +152,13 @@ class Achievement(models.Model):
 	receiving_date = models.DateTimeField()
 	image = models.ImageField()
 	info = models.CharField(max_length=1000)
+
+
+class HackRateByUser(models.Model):
+	'''model for rates by User'''
+	user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+	hack = models.ForeignKey(Hackathon, on_delete=models.CASCADE)
+	rate = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+	comment = models.CharField(max_length=1000)
+
+
