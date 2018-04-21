@@ -157,10 +157,12 @@ def new_hackathon(request):
     return render(request, 'new_hackathon.html', {'form': form})
 
 
-
+@login_required
 def hackaton_list(request):
+	user = Profile.objects.filter(user__username=request.user.username).first()
 	hackatons = Hackathon.objects.all()
-	return render(request, 'hackaton_list.html', {'hacks': hackatons})
+	print(user.avatar)
+	return render(request, 'hackaton_list.html', {'hacks': hackatons, 'user': user})
 
 
 '''change hackathon view'''
