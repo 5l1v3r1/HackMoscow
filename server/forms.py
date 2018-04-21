@@ -5,7 +5,7 @@ from django.contrib.admin import widgets
 from django.forms.formsets import BaseFormSet
 from django.forms import ModelForm
 from .models import Hackathon, Tag
-from ajax_select.fields import AutoCompleteSelectMultipleField
+from ajax_select.fields import AutoCompleteSelectMultipleField, AutoCompleteSelectField
 from ajax_select import make_ajax_field
 
 class SignUpForm(UserCreationForm):
@@ -40,7 +40,8 @@ class ApplyToHack(ModelForm):
 
 
 
-
+class SkillSearch(forms.Form):
+	skills = AutoCompleteSelectField('skills', help_text=None)	
 
 
 '''form for new hackathon'''
