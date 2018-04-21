@@ -15,11 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from server.views import team_info, create_team, hack_info
+from server.views import team_info, create_team, hack_info, index
 from server.views import signup, signin, hackaton_list, new_hackathon, change_hackathon
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('signup/', signup),
+	path('', index),
+	path('/index', index),
     path('teams/<int:team_id>', team_info),
 	path('create_team/', create_team),
     path('signin/', signin),

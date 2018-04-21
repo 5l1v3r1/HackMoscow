@@ -20,6 +20,9 @@ def user_info(request):
 		user = Profile.objects.get(pk=id)
 		return render(request, 'profile.html', )
 
+def index(request):
+	return render(request, 'index.html')
+
 
 # region Team
 def team_info(request, team_id):
@@ -59,7 +62,12 @@ def create_team(request):
 
 # endregion
 
-
+def hack_info(request, hack_id):
+	hack = Hackathon.objects.get(id = hack_id)
+	if hack!=None:
+		return render(request, 'hack_info.html', {'hack':hack})
+	else:
+		return HttpResponse("404")
 
 # Create your views here.
 def signup(request):
