@@ -4,6 +4,10 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, HttpResponse
 from server.forms import SignUpForm, LoginForm, CreateTeamForm
+from .models import Profile, Hackathon, Team, Skill, Tag, HackRateByUser
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404, HttpResponseRedirect
+
+from server.forms import SignUpForm, LoginForm, NewHackathonForm, ApplyToHack, ReviewForm
 from .models import Profile, Hackathon, Team, Skill, Tag, UserRating
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404, HttpResponseRedirect
 
@@ -23,9 +27,12 @@ def user_info(request):
 		user_hack_rating = 0
 		for hack in user.user.hackathon_set.order_by('id'):
 			user_hack_rating += 10  # TODO: нормальный рейтинг
-		rate = UserRating.objects.get(user_id=user.id)
-		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart':rate.diagram})
-
+		try:
+			rate = UserRating.objects.get(user_id=user.id)
+			diagram = rate.diagram
+		except:
+			diagram = None
+		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart':diagram})
 
 
 @login_required
@@ -82,27 +89,30 @@ def create_team(request, hack_id):
 
 # Create your views here.
 def signup(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST, request.FILES)
-        if form.is_valid():
-            user = form.save()
-            prof = Profile(user=user, name=form.cleaned_data.get('first_name'), surname=form.cleaned_data.get('last_name'), github=form.cleaned_data.get('github'), vk=form.cleaned_data.get('vk'), facebook=form.cleaned_data.get('facebook'),avatar=request.FILES['avatar'])
-            prof.save()
-            skills = request.POST.getlist('skills')
-            skills = skills[0].split('|')
-            if len(skills) != 2:
-                for i in skills:
-                    if i.isdigit():
-                        skill = Skill.objects.get(id=int(i))
-                        prof.skills.add(skill)
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            return HttpResponse("You did it!!!!")
-    else:
-        form = SignUpForm()
-    return render(request, 'signup.html', {'form': form})
+	if request.method == 'POST':
+		form = SignUpForm(request.POST, request.FILES)
+		if form.is_valid():
+			user = form.save()
+			prof = Profile(user=user, name=form.cleaned_data.get('first_name'),
+						   surname=form.cleaned_data.get('last_name'), github=form.cleaned_data.get('github'),
+						   vk=form.cleaned_data.get('vk'), facebook=form.cleaned_data.get('facebook'),
+						   avatar=request.FILES['avatar'])
+			prof.save()
+			skills = request.POST.getlist('skills')
+			skills = skills[0].split('|')
+			if len(skills) != 2:
+				for i in skills:
+					if i.isdigit():
+						skill = Skill.objects.get(id=int(i))
+						prof.skills.add(skill)
+			username = form.cleaned_data.get('username')
+			raw_password = form.cleaned_data.get('password1')
+			user = authenticate(username=username, password=raw_password)
+			login(request, user)
+			return HttpResponse("You did it!!!!")
+	else:
+		form = SignUpForm()
+	return render(request, 'signup.html', {'form': form})
 
 
 def signin(request):
@@ -129,6 +139,7 @@ def signin(request):
 
 '''View for new hackathons'''
 
+
 @login_required
 def new_hackathon(request):
     if request.method == 'POST':
@@ -150,12 +161,14 @@ def new_hackathon(request):
     return render(request, 'new_hackathon.html', {'form': form})
 
 
+
 def hackaton_list(request):
 	hackatons = Hackathon.objects.all()
 	return render(request, 'hackaton_list.html', {'hacks': hackatons})
 
 
 '''change hackathon view'''
+
 
 @login_required
 def change_hackathon(request, id):
@@ -183,24 +196,52 @@ def change_hackathon(request, id):
 def hack_info(request, hack_id):
 	hack = get_object_or_404(Hackathon, id=hack_id)
 
-	if request.user.username != "":
-		user = get_object_or_404(User, username=request.user.username)
-		applied_users = hack.users.filter(id=user.id)
+	user = get_object_or_404(User, username=request.user.username)
+	applied_users = hack.users.filter(id=user.id)
 
-		users_team_in_hack = None
+	users_team_in_hack = None
 
-		for team in user.team_set.order_by('id'):
-			if team.hackathones.filter(id=hack.id).count() > 0:
-				users_team_in_hack = team
-				break
+	for team in user.team_set.order_by('id'):
+		if team.hackathones.filter(id=hack.id).count() > 0:
+			users_team_in_hack = team
+			break
 
-		return render(request, 'hack_info.html', {'hack': hack,
-													'user_id': user.id,
-													'is_user_applied': applied_users.count() != 0,
-					  								'user_has_team': users_team_in_hack is not None,
-													'users_team_in_hack': users_team_in_hack})
+	rate = HackRateByUser.objects.filter(hack_id=hack_id).filter(user_id=user.id).first()
+
+	rating = 0
+	cnt = 0
+	for user_rate in HackRateByUser.objects.filter(hack_id=hack_id):
+		cnt += 1
+		rating += int(user_rate.rate)
+
+	if cnt != 0:
+		rating /= cnt
 	else:
-		return HttpResponse("Lol, who are you?")
+		rating = -1
+
+	if request.method == 'POST':
+		form = ReviewForm(request.POST)
+		if form.is_valid():
+			rate = form.save(commit=False)
+			rate.user= Profile.objects.get(id=user.id)
+			rate.hack = hack
+			rate.save()
+
+			return redirect('hack_info', hack_id=hack_id)
+	else:
+		form = ReviewForm()
+
+
+	return render(request, 'hack_info.html', {'hack': hack,
+											  'user_id': user.id,
+											  'is_user_applied': applied_users.count() != 0,
+											  'user_has_team': users_team_in_hack is not None,
+											  'users_team_in_hack': users_team_in_hack,
+											  'can_review': applied_users.count() != 0,
+											  'review_form': form,
+											  'has_rate': rate is not None,
+											  'rate': rate,
+											  'rating': rating})
 
 
 

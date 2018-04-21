@@ -13,6 +13,8 @@
 {% for skill in skills %}
 {{skill.name}} <br>
 {% endfor %}
+{%  if chart %}
 <img src="/{{chart}}"/><br>
+{%  endif %}
 </body>
 </html>
