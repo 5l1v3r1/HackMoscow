@@ -15,8 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls.static import static
 from server.views import team_info, create_team, hack_info
 from server.views import signup, signin, hackaton_list, new_hackathon, change_hackathon, add_user_to_hack
+from . import settings
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('signup/', signup),
@@ -29,4 +32,5 @@ urlpatterns = [
 	path('hack_info/<int:hack_id>', hack_info),
 	path('accounts/login/', signin),
 	path('add_user_to_hack/<int:hack_id>/<int:user_id>', add_user_to_hack, name='add_user_to_hack'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT,) \
+              + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

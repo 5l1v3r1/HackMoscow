@@ -13,6 +13,7 @@ class Skill(models.Model):
 class Profile(models.Model):
 	'''model for Profile'''
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	#avatar = models.FileField(upload_to='uploads/')
 	access_level = models.IntegerField(
 		default=0, verbose_name='Уровень доступа')
 	birthday = models.DateField(auto_now=True)
@@ -22,12 +23,6 @@ class Profile(models.Model):
 	facebook = models.CharField(max_length=100)
 	vk = models.CharField(max_length=100)
 	skills = models.ManyToManyField(Skill)
-
-@receiver(post_save, sender=User)
-def update_user_profile(sender, instance, created, **kwargs):
-	if created:
-		Profile.objects.create(user=instance)
-	instance.profile.save()
 
 
 class Hackathon(models.Model):
