@@ -17,6 +17,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.forms.formsets import formset_factory
 from django.forms.models import model_to_dict
+from .utils import rating, get_user_rating
 
 
 @login_required
@@ -24,15 +25,30 @@ def user_info(request):
 	if request.method == 'GET':
 		user = Profile.objects.get(user_id=request.user.id)
 		skills = user.skills.all()
-		user_hack_rating = 0
-		for hack in user.user.hackathon_set.order_by('id'):
-			user_hack_rating += 10  # TODO: нормальный рейтинг
+		user_hack_rating = get_user_rating(user)
+
 		try:
 			rate = UserRating.objects.get(user_id=user.id)
 			diagram = rate.diagram
 		except:
 			diagram = None
-		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart':diagram})
+		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart': diagram})
+
+
+# other user page
+def other_user(request, user_id):
+	if request.method == 'GET':
+		user = Profile.objects.get(id=user_id)
+		skills = user.skills.all()
+		user_hack_rating = get_user_rating(user)
+
+		#try:
+		rate = UserRating.objects.get(user_id=user.id)
+		diagram = rate.diagram
+		#except:
+		#	diagram = None
+		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart': diagram})
+
 
 
 @login_required
@@ -264,3 +280,11 @@ def add_user_to_team(request, team_id, user_id):
 		return redirect('teams', hack_id=team_id)
 	else:
 		return redirect('teams', hack_id=team_id)
+
+
+# users rating
+def users_rating(request):
+	if request.method == 'GET':
+		users_list = list(Profile.objects.all()) #TODO: нормально сделать
+		users_list.sort(key=get_user_rating, reverse=True)
+		return render(request, 'user_rating.html', {'users': users_list})
