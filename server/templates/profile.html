@@ -42,7 +42,11 @@
 							</div>
 
 							<div class="achievement ds-broad">
-
+                                <ul class="list-group">
+                                {% for achiev in user.achievement_set.all %}
+                                    <li class="list-group-item">{{ achiev.info }}</li>
+                                {% endfor %}
+                            </ul>
 							</div>
 
 							<div class="friends ds-broad">
@@ -56,13 +60,19 @@
 					</td>
 					<td width="100%" valign="top">
 						<div class="rightBoard">
-							<div class="userInfo ds-broad">
-                                <p>{{ user.name }} {{ user.surname }}</p>
-                                <h2>Skills</h2>
+							<div class="userInfo ds-broad" style="padding-left: 4%">
+                                <h1 style="padding-left: 30%">{{ user.name }} {{ user.surname }}</h1>
+                                <h2 style="padding: 10%;">Skills</h2>
+                                <ul class="list-group">
                                 {% for skill in skills %}
-                                    <p>{{ skill.name }}</p>
+                                    <li class="list-group-item">{{ skill.name }}</li>
                                 {% endfor %}
+                                </ul>
 							</div>
+                            <div class="levelInfo ds-broad">
+                                {%  if chart %}
+                                    <img src="/{{chart}}"/><br>
+                                {%  endif %}
                             <div class="levelInfo ds-broad">
                                 <p>Hacker's rating:
                                     {% if user_hack_rating > 0 %}
