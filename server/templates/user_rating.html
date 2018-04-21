@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+    {% load static %}
+	<meta charset="UTF-8">
+	<title>In.Team - Хакеры</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	<link href="{% static 'css/bootstrap.css' %} " rel="stylesheet">
+	<link href="{% static 'css/board.css' %}" rel="stylesheet">
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-height">
+		<a class="navbar-brand center logo" href="#">In.Team</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar1" aria-controls="navbar1" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbar1">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item">
+					<a class="nav-link navbar-fontSize" href="{% url 'hack_list' %}">Хакатоны</a>
+				</li>
+				<li class="nav-item active" style="padding-left: 5%">
+					<a class="nav-link navbar-fontSize" href="{% url 'rating' %}">Хакеры<span class="sr-only">(current)</span></a>
+				</li>
+			</ul>
+			<div>
+                <p id="userName" class="lable-userName"><a href="{% url 'profile' %}">{{ user.name }} {{ user.surname }}</a></p>
+				<img src="/media/{{ user.avatar }}" id="user_avatar" class="avatar" alt="">
+			</div>
+		</div>
+	</nav>
+	<div>
+        {% if users %}
+            {% for user in users %}
+                <div class="hackathone-broad">
+			        <img src="/media/{{ user.avatar}}" class="hackathone-avatar" id="hackathone_avatar" alt="">
+			        <div style="display: inline-block">
+				        <div class="hackathone-text">
+					        <h class="center">{{ forloop.counter }}</h>
+					        <p>{{ user.name }} {{ user.surname }} ({{ user.user.username }})</p>
+				        </div>
+                        <a href="{% url 'other_user' user.id %}" class="hackathone-moreInfo">Подробнее</a>
+			        </div>
+		        </div>
+            {% endfor %}
+        {% else %}
+            Хакатонов нет
+        {% endif %}
+	</div>
+</body>
+</html>

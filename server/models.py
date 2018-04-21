@@ -143,6 +143,8 @@ class UserRating(models.Model):
 					verticalalignment="center")
 		url = 'media/dia'+ str(self.user.id) + '.jpg'
 		plt.savefig(url)
+		plt.close()
+
 		return url
 
 
