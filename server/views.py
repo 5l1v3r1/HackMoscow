@@ -261,6 +261,4 @@ def add_user_to_team(request, team_id, user_id):
 		team = get_object_or_404(Team, id=team_id)
 		user = get_object_or_404(User, id=user_id)
 		team.users.add(user)
-		return redirect('teams', hack_id=team_id)
-	else:
-		return redirect('teams', hack_id=team_id)
+	return redirect('teams', hack_id=team_id)
