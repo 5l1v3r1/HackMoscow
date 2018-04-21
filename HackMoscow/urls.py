@@ -16,8 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls.static import static
-from server.views import team_info, create_team, hack_info
-from server.views import signup, signin, hackaton_list, new_hackathon, change_hackathon, add_user_to_hack
+from server.views import team_info, create_team, hack_info, signup, signin, hackaton_list, new_hackathon, change_hackathon, add_user_to_hack, user_info
 from . import settings
 
 urlpatterns = [
@@ -26,6 +25,7 @@ urlpatterns = [
     path('teams/<int:team_id>', team_info),
 	path('create_team/', create_team),
     path('signin/', signin),
+    path('lk/', user_info),
     path('new_hack/', new_hackathon),
     path('hack_list/', hackaton_list),
     path('change_hack_info/<int:id>', change_hackathon),

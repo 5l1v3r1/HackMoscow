@@ -10,10 +10,17 @@ class Skill(models.Model):
 	name = models.CharField(max_length=500)
 
 
+class Tag(models.Model):
+	'''model for hackathon tags '''
+	tagname = models.CharField(max_length=30, default="[Undefinded]")
+	def __str__(self):
+		return self.tagname
+
+
 class Profile(models.Model):
 	'''model for Profile'''
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
-	#avatar = models.FileField(upload_to='uploads/')
+	avatar = models.ImageField(upload_to='uploads/', default = 'unknown_img.jpg')
 	access_level = models.IntegerField(
 		default=0, verbose_name='Уровень доступа')
 	birthday = models.DateField(auto_now=True)
@@ -33,6 +40,7 @@ class Hackathon(models.Model):
 	users = models.ManyToManyField(User)
 	duration = models.IntegerField(validators=[MinValueValidator(1), ])
 	max_members = models.IntegerField(validators=[MinValueValidator(1), ])
+	tags = models.ManyToManyField(Tag, related_name="tags", verbose_name='Теги')
 
 	@property
 	def hack_url(self):

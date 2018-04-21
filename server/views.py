@@ -5,7 +5,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, HttpResponse
 from server.forms import SignUpForm, LoginForm, CreateTeamForm
 from .models import Profile, Hackathon, Team
-from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404, HttpResponseRedirect
+
 from server.forms import SignUpForm, LoginForm, NewHackathonForm, ApplyToHack
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -16,8 +17,8 @@ from django.forms.models import model_to_dict
 
 def user_info(request):
 	if request.method == 'GET':
-		user = Profile.objects.get(pk=id)
-		return render(request, 'profile.html', )
+		user = Profile.objects.get(user_id=request.user.id)
+		return render(request, 'profile.html', {'user':user})
 
 
 # region Team
@@ -63,10 +64,10 @@ def create_team(request):
 # Create your views here.
 def signup(request):
 	if request.method == 'POST':
-		form = SignUpForm(request.POST)
+		form = SignUpForm(request.POST, request.FILES)
 		if form.is_valid():
 			user = form.save()
-			prof = Profile(user=user, name=form.cleaned_data.get('first_name'), surname=form.cleaned_data.get('last_name'), github=form.cleaned_data.get('github'), vk=form.cleaned_data.get('vk'), facebook=form.cleaned_data.get('facebook'))
+			prof = Profile(user=user, name=form.cleaned_data.get('first_name'), surname=form.cleaned_data.get('last_name'), github=form.cleaned_data.get('github'), vk=form.cleaned_data.get('vk'), facebook=form.cleaned_data.get('facebook'),avatar=request.FILES['avatar'])
 			prof.save()
 			username = form.cleaned_data.get('username')
 			raw_password = form.cleaned_data.get('password1')
@@ -88,7 +89,8 @@ def signin(request):
 				user = authenticate(username=username, password=raw_password)
 				if user:
 					login(request, user)
-					return HttpResponse("200")
+					return HttpResponseRedirect('/lk')
+
 				else:
 					return HttpResponse("403")
 			except Exception as e:
