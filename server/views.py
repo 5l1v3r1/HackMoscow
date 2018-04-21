@@ -121,14 +121,6 @@ def hackaton_list(request):
 	return render(request, 'hackaton_list.html', {'hacks': hackatons})
 
 
-def hackathon_page(request, id):
-	try:
-		hack = Hackathon.objects.get(id=id)
-		return render(request, 'hackaton', {'hack': hack})
-	except:
-		return HttpResponse("404")
-
-
 '''change hackathon view'''
 
 

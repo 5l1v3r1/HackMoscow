@@ -42,7 +42,7 @@ class Hackathon(models.Model):
 
 	@property
 	def hack_url(self):
-		return "/h{0}".format(self.id)
+		return "/hack_info/{0}".format(self.id)
 
 
 class News(models.Model):
