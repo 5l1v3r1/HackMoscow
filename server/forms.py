@@ -16,7 +16,7 @@ class SignUpForm(UserCreationForm):
 	vk = forms.CharField(max_length=100, required=True)
 	facebook = forms.CharField(max_length=100, required=True)
 	email = forms.EmailField(max_length=254)
-
+	skills = AutoCompleteSelectMultipleField('skills')
 	class Meta:
 		model = User
 		fields = ('username', 'first_name', 'last_name', 'avatar', 'email', 'password1', 'password2', 'github', 'vk', 'facebook')

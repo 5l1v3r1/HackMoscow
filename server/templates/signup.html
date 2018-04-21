@@ -1,5 +1,10 @@
 <html>
-    <head>Registration</head>
+    <head>    
+      {% load static %}
+        <script src="{% static 'ajax_select/js/bootstrap.js' %}"></script>
+    <script src="{% static 'ajax_select/js/ajax_select.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'ajax_select/css/ajax_select.css' %}">
+  </head>
 <body>
   <h2>Sign up</h2>
   <form method="post" enctype="multipart/form-data">

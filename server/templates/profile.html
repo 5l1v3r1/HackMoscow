@@ -7,6 +7,9 @@
 <body>
 <h3>Профиль</h3>
 <img src="/media/{{user.avatar}}"/><br>
-{{ user.name }} {{user.surname}}
+<p>{{ user.name }} {{user.surname}}</p>
+{% for skill in skills %}
+{{skill.name}}
+{% endfor %}
 </body>
 </html>
