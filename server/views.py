@@ -7,7 +7,7 @@ from server.forms import SignUpForm, LoginForm, CreateTeamForm
 from .models import Profile, Hackathon, Team, Skill, Tag
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404, HttpResponseRedirect
 
-from server.forms import SignUpForm, LoginForm, NewHackathonForm, ApplyToHack
+from server.forms import SignUpForm, LoginForm, NewHackathonForm, ApplyToHack, SkillSearch
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
@@ -31,13 +31,17 @@ def user_info(request):
 @login_required
 # region Team
 def team_info(request, team_id):
-	'''provides information for team info page'''
-	team = Team.objects.all().filter(id=team_id).first()
-	if team != None:
-		users = [user for user in team.users.all()]
-		return render(request, 'team_info.html', {'team': team, 'users': users})
-	else:
-		return HttpResponse("403")
+    '''provides information for team info page'''
+    if request.method == 'POST':
+        skills = request.POST.get('skills')
+        print(skills)
+    team = Team.objects.all().filter(id=team_id).first()
+    if team != None:
+        users = [user for user in team.users.all()]
+        form = SkillSearch()
+        return render(request, 'team_info.html', {'team': team, 'users': users, 'form':form})
+    else:
+        return HttpResponse("403")
 
 
 @login_required
@@ -55,7 +59,6 @@ def create_team(request, hack_id):
 				team.save()
 				team.users.add(user)
 				team.save()
-				print(user.id)
 
 				return redirect('hack_info', hack_id=hack_id)
 
@@ -135,7 +138,7 @@ def new_hackathon(request):
                     if i.isdigit():
                         tag = Tag.objects.get(id=int(i))
                         hackathon.tags.add(tag)
-            return HttpResponse("Hackathon created!")
+            return redirect('hack_list')
     else:
         form = NewHackathonForm()
     return render(request, 'new_hackathon.html', {'form': form})
@@ -201,4 +204,4 @@ def add_user_to_hack(request, hack_id, user_id):
 	user = get_object_or_404(User, id=user_id)
 	hack.users.add(user)
 
-	return HttpResponse("You are added!")
+	return redirect('hack_info', hack_id=hack_id)
