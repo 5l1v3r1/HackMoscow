@@ -1,20 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-<h3>Профиль</h3>
-<img src="/media/{{user.avatar}}"/><br>
-<p>Рейтинг хакера: </p>
-<img src="{{ diag }}">
-<p>{{ user.name }} {{user.surname}}</p>
-{% for skill in skills %}
-{{skill.name}} <br>
-{% endfor %}
-{%  if chart %}
-<img src="/{{chart}}"/><br>
-{%  endif %}
-</body>
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+        {% load static %}
+		<title>In.Team - Профиль</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+		<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+		<link href="{% static 'css/person.css' %}" rel="stylesheet">
+		<link href="{% static 'css/design.css' %}" rel="stylesheet">
+	</head>
+
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-height">
+			<a class="navbar-brand center logo" href="#">In.Team</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar1" aria-controls="navbar1" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbar1">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link navbar-fontSize" href="{% url 'hack_list' %}">Хакатоны<span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item" style="padding-left: 5%">
+						<a class="nav-link navbar-fontSize" href="#">Хакеры</a>
+					</li>
+					<li class="nav-item" style="padding-left: 5%">
+						<a class="nav-link navbar-fontSize" href="#">Команды</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		<div class="board">
+			<table width="300px" cellspacing="0" cellpadding="5">
+				<tr>
+					<td width="100%" valign="top">
+						<div class="leftBoard">
+							<div class="avatar ds-broad">
+								<img src="/media/{{user.avatar}}" class="avatar" alt="">
+							</div>
+
+							<div class="achievement ds-broad">
+
+							</div>
+
+							<div class="friends ds-broad">
+
+							</div>
+
+							<div class="hackathones ds-broad">
+
+							</div>
+						</div>
+					</td>
+					<td width="100%" valign="top">
+						<div class="rightBoard">
+							<div class="userInfo ds-broad">
+                                <p>{{ user.name }} {{ user.surname }}</p>
+                                <h2>Skills</h2>
+                                {% for skill in skills %}
+                                    <p>{{ skill.name }}</p>
+                                {% endfor %}
+							</div>
+                            <div class="levelInfo ds-broad">
+                                {%  if chart %}
+                                    <img src="/{{chart}}"/><br>
+                                {%  endif %}
+						    </div>
+
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</body>
 </html>

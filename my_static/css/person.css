@@ -1,0 +1,60 @@
+@charset "UTF-8";
+/* CSS Document */
+
+.center{
+	position: relative;
+	left: 46%;
+}
+
+.logo{
+	font-size: 2.5em;
+}
+
+.navbar-height{
+	height: 100px;
+}
+
+.navbar-fontSize{
+	font-size: 2em;
+}
+
+.board{
+	margin: 0px auto;
+	width: 60%;
+}
+.rightBoard{}
+
+.leftBoard{
+}
+
+.avatar{
+	width: 400px;
+	height: 400px;
+}
+
+.achievement{
+	width: 400px;
+	height: 100px;
+}
+
+.friends{
+	width: 400px;
+	height: 200px;
+}
+
+.hackathones{
+	width: 400px;
+	height: 600px;
+}
+
+.userInfo{
+	width: 600px;
+	height: 500px;
+}
+
+.levelInfo{
+	width: 600px;
+	height: 800px;
+}
+
+
