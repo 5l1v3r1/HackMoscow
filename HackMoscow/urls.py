@@ -16,10 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from server.views import signup, team_info, create_team, signin
+from server.views import signup, signin, hackaton_list, new_hackathon, change_hackathon
 urlpatterns = [
-    #path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
     path('signup/', signup),
     path('teams/<int:team_id>', team_info),
 	path('create_team/', create_team),
 	path('signin/', signin)
+    path('signin/', signin),
+    path('new_hack/', new_hackathon),
+    path('hack_list/', hackaton_list),
+    path('change_hack_info/<int:id>', change_hackathon),
 ]

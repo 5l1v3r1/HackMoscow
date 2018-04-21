@@ -1,0 +1,13 @@
+<html>
+    <head></head>
+<body>
+{% if hacks %}
+{% for h in hacks %}
+    <a href={{h.hack_url}}>{{h.name}}</a>
+{% endfor %}
+{% else %}
+Хакатонов нет
+{% endif %}
+</body>
+
+</html>

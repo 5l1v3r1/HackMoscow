@@ -1,7 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.contrib.admin import widgets
 from django.forms.formsets import BaseFormSet
+
+from .models import Hackathon
 
 
 class SignUpForm(UserCreationForm):
@@ -18,6 +21,22 @@ class SignUpForm(UserCreationForm):
 
 
 class LoginForm(forms.Form):
+    username = forms.CharField(max_length=254, required=True)
+    password = forms.CharField(widget=forms.PasswordInput())
+
+
+'''form for new hackathon'''
+class NewHackathonForm(forms.ModelForm):
+
+    class Meta:
+        model = Hackathon
+        fields = ['name', 'description', 'max_members', 'date', 'duration']
+
+    def __init__(self, *args, **kwargs):
+        super(NewHackathonForm, self).__init__(*args, **kwargs)
+        self.fields['date'].widget = forms.DateInput(format='%d/%m/%y')
+
+
 	username = forms.CharField(max_length=254, required=True)
 	password = forms.CharField(widget=forms.PasswordInput())
 
