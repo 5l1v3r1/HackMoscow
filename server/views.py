@@ -27,8 +27,12 @@ def user_info(request):
 		user_hack_rating = 0
 		for hack in user.user.hackathon_set.order_by('id'):
 			user_hack_rating += 10  # TODO: нормальный рейтинг
-		rate = UserRating.objects.get(user_id=user.id)
-		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart':rate.diagram})
+		try:
+			rate = UserRating.objects.get(user_id=user.id)
+			diagram = rate.diagram
+		except:
+			diagram = None
+		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart':diagram})
 
 
 @login_required
