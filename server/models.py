@@ -59,8 +59,17 @@ class Invintation(models.Model):
 	hackathon = models.ForeignKey(Hackathon, on_delete=models.CASCADE, related_name='hackathon')
 	date = models.DateField(auto_now=True)
 
+
 class Team(models.Model):
 	'''class for team'''
 	name = models.CharField(max_length=100)
 	users = models.ManyToManyField(User)
 	hackathones = models.ManyToManyField(Hackathon)
+
+
+class Achievement(models.Model):
+	'''class fot achievement'''
+	user = models.ManyToManyField(Profile)
+	receiving_date = models.DateTimeField()
+	image = models.ImageField()
+	info = models.CharField(max_length=1000)

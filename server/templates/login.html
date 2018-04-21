@@ -1,20 +1,62 @@
-<html>
-    <head></head>
-<body>
-  <h2>Sign in</h2>
-  <form method="post">
-        {% csrf_token %}
-        {% for field in form %}
-          <p>
-            {{ field.label_tag }}<br>
-            {{ field }}
 
-            {% for error in field.errors %}
-              <p style="color: red">{{ error }}</p>
-            {% endfor %}
-          </p>
-        {% endfor %}
-        <button type="submit">Sign in</button>
-      </form>
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    {% load static %}
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" type="text/css" href="{% static 'css/style1.css' %}" >
+	<title>Hack.In</title>
+
+	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+
+	<header>
+		<div id="singIn-button" class="header-button-pos">
+			<a href="#" v-on:click="seen = !seen" class="header-button">Sing In</a>
+			<a href="{% url 'sign_up' %}" class="header-button">Sing Up</a>
+			<transition>
+				<div v-if="seen">
+
+					<div class="singIn-form-background">
+					</div>
+
+					<form action="" method="post">
+                        {% csrf_token %}
+						<div class="few-right">
+							<p>Логин</p>
+							<input class="singIn-input" name="username">
+							<p>Пароль</p>
+							<input class="singIn-input" type="password" name="password">
+						</div>
+						<button href="#" type="submit" class="header-button-center">Sing In</button>
+					</form>
+
+                    <!--<form method="post">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <p>
+                            {{ field.label_tag }}<br>
+                            {{ field }}
+
+                            {% for error in field.errors %}
+                                <p style="color: red">{{ error }}</p>
+                            {% endfor %}
+                            </p>
+                        {% endfor %}
+                    <button type="submit" class="header-button-center">Sign in</button>
+                    </form>-->
+				</div>
+			</transition>
+			<script src="{% static 'js/index.js' %}"></script>
+		</div>
+	</header>
+	<div class="content">
+	</div>
+	<div class="sing-up">
+		<a href="{% url 'sign_up' %}" class="registration-button">Sing Up</a>
+	</div>
 </body>
 </html>

@@ -23,7 +23,7 @@ from . import settings
 urlpatterns = [
     path(r'^admin/lookups/', include(ajax_select_urls)),
     path('admin/', admin.site.urls),
-    path('signup/', signup),
+    path('signup/', signup, name='sign_up'),
     path('teams/<int:team_id>', team_info),
 	path('create_team/<int:hack_id>', create_team, name='create_team'),
     path('signin/', signin),
