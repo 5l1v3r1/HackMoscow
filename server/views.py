@@ -8,7 +8,7 @@ from .models import Profile, Hackathon, Team, Skill, Tag, HackRateByUser
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404, HttpResponseRedirect
 
 from server.forms import SignUpForm, LoginForm, NewHackathonForm, ApplyToHack, ReviewForm
-from .models import Profile, Hackathon, Team, Skill, Tag, UserRating, Achievement
+from .models import Profile, Hackathon, Team, Skill, Tag, UserRating
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404, HttpResponseRedirect
 
 from server.forms import SignUpForm, LoginForm, NewHackathonForm, ApplyToHack, SkillSearch
@@ -17,6 +17,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.forms.formsets import formset_factory
 from django.forms.models import model_to_dict
+from .utils import rating, get_user_rating
 
 
 @login_required
@@ -24,36 +25,52 @@ def user_info(request):
 	if request.method == 'GET':
 		user = Profile.objects.get(user_id=request.user.id)
 		skills = user.skills.all()
-		user_hack_rating = 0
-		rate = UserRating.objects.get(user_id=user.id)
-		achievs = user.achievement_set.all()
-		diagram = rate.diagram
-		return render(request, 'profile.html',
-					  {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart': diagram})
+		user_hack_rating = get_user_rating(user)
+
+		try:
+			rate = UserRating.objects.get(user_id=user.id)
+			diagram = rate.diagram
+		except:
+			diagram = None
+		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart': diagram})
+
+
+# other user page
+def other_user(request, user_id):
+	if request.method == 'GET':
+		user = Profile.objects.get(id=user_id)
+		skills = user.skills.all()
+		user_hack_rating = get_user_rating(user)
+
+		try:
+			rate = UserRating.objects.get(user_id=user.id)
+			diagram = rate.diagram
+		except:
+			diagram = None
+		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart': diagram})
+
 
 
 @login_required
 # region Team
 def team_info(request, team_id):
-	'''provides information for team info page'''
-	if request.method == 'POST':
-		skills = request.POST.get('skills')
-		skill = Skill.objects.get(id=int(skills))
-		candidates = skill.profile_set.all().exclude(user_id=request.user.id)[:5]
-	team = Team.objects.all().filter(id=team_id).first()
-	if team != None:
-		users = [user for user in team.users.all()]
-		form = SkillSearch()
-		if request.method == 'POST':
-			skills = request.POST.get('skills')
-			skill = Skill.objects.get(id=int(skills))
-			candidates = skill.profile_set.all().exclude(user_id=request.user.id)[:5]
-			return render(request, 'team_info.html',
-						  {'team': team, 'users': users, 'form': form, 'candidates': candidates})
-		return render(request, 'team_info.html', {'team': team, 'users': users, 'form': form})
-	else:
-		return HttpResponse("403")
-
+    '''provides information for team info page'''
+    if request.method == 'POST':
+        skills = request.POST.get('skills')
+        skill = Skill.objects.get(id=int(skills))
+        candidates = skill.profile_set.all().exclude(user_id=request.user.id)[:5]
+    team = Team.objects.all().filter(id=team_id).first()
+    if team != None:
+        users = [user for user in team.users.all()]
+        form = SkillSearch()
+        if request.method == 'POST':
+            skills = request.POST.get('skills')
+            skill = Skill.objects.get(id=int(skills))
+            candidates = skill.profile_set.all().exclude(user_id=request.user.id)[:5]
+            return render(request, 'team_info.html', {'team': team, 'users': users, 'form':form, 'candidates':candidates})
+        return render(request, 'team_info.html', {'team': team, 'users': users, 'form':form})
+    else:
+        return HttpResponse("403")
 
 
 @login_required
@@ -141,23 +158,23 @@ def signin(request):
 
 @login_required
 def new_hackathon(request):
-	if request.method == 'POST':
-		form = NewHackathonForm(request.POST)
-		if form.is_valid():
-			hackathon = form.save()
-			hackathon.refresh_from_db()
-			hackathon.save()
-			tags = request.POST.getlist('tags')
-			tags = tags[0].split('|')
-			if len(tags) != 2:
-				for i in tags:
-					if i.isdigit():
-						tag = Tag.objects.get(id=int(i))
-						hackathon.tags.add(tag)
-			return redirect('hack_list')
-	else:
-		form = NewHackathonForm()
-	return render(request, 'new_hackathon.html', {'form': form})
+    if request.method == 'POST':
+        form = NewHackathonForm(request.POST)
+        if form.is_valid():
+            hackathon = form.save()
+            hackathon.refresh_from_db()
+            hackathon.save()
+            tags = request.POST.getlist('tags')
+            tags = tags[0].split('|')
+            if len(tags) != 2:
+                for i in tags:
+                    if i.isdigit():
+                        tag = Tag.objects.get(id=int(i))
+                        hackathon.tags.add(tag)
+            return redirect('hack_list')
+    else:
+        form = NewHackathonForm()
+    return render(request, 'new_hackathon.html', {'form': form})
 
 
 @login_required
@@ -224,13 +241,14 @@ def hack_info(request, hack_id):
 		form = ReviewForm(request.POST)
 		if form.is_valid():
 			rate = form.save(commit=False)
-			rate.user = Profile.objects.get(id=user.id)
+			rate.user= Profile.objects.get(id=user.id)
 			rate.hack = hack
 			rate.save()
 
 			return redirect('hack_info', hack_id=hack_id)
 	else:
 		form = ReviewForm()
+
 
 	return render(request, 'hack_info.html', {'hack': hack,
 											  'user_id': user.id,
@@ -242,6 +260,7 @@ def hack_info(request, hack_id):
 											  'has_rate': rate is not None,
 											  'rate': rate,
 											  'rating': rating})
+
 
 
 # adds user to hackathon
@@ -261,3 +280,11 @@ def add_user_to_team(request, team_id, user_id):
 		return redirect('teams', hack_id=team_id)
 	else:
 		return redirect('teams', hack_id=team_id)
+
+
+# users rating
+def users_rating(request):
+	if request.method == 'GET':
+		users_list = list(Profile.objects.all()) #TODO: нормально сделать
+		users_list.sort(key=get_user_rating, reverse=True)
+		return render(request, 'user_rating.html', {'users': users_list})

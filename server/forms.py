@@ -11,7 +11,6 @@ from ajax_select.fields import AutoCompleteSelectMultipleField, AutoCompleteSele
 from ajax_select import make_ajax_field
 from django.forms import models
 
-
 class SignUpForm(UserCreationForm):
 	first_name = forms.CharField(max_length=30, required=True)
 	last_name = forms.CharField(max_length=30, required=True)
@@ -21,11 +20,9 @@ class SignUpForm(UserCreationForm):
 	facebook = forms.CharField(max_length=100, required=True)
 	email = forms.EmailField(max_length=254)
 	skills = AutoCompleteSelectMultipleField('skills')
-
 	class Meta:
 		model = User
-		fields = (
-		'username', 'first_name', 'last_name', 'avatar', 'email', 'password1', 'password2', 'github', 'vk', 'facebook')
+		fields = ('username', 'first_name', 'last_name', 'avatar', 'email', 'password1', 'password2', 'github', 'vk', 'facebook')
 
 
 class LoginForm(forms.Form):
@@ -37,24 +34,24 @@ class LoginForm(forms.Form):
 		self.fields['username'].widget.attrs.update({'class': 'singIn-input'})
 		self.fields['password'].widget.attrs.update({'class': 'singIn-input'})
 
-
 class ApplyToHack(ModelForm):
 	hack = forms.HiddenInput
-
 	class Meta:
 		model = User
-		fields = ('id', 'username', 'first_name', 'last_name',
+		fields = ('id','username', 'first_name', 'last_name',
 				  'email')
 
 
+
 class SkillSearch(forms.Form):
-	skills = AutoCompleteSelectField('skills', help_text=None)
+	skills = AutoCompleteSelectField('skills', help_text=None)	
 
 
 '''form for new hackathon'''
 
 
 class NewHackathonForm(forms.ModelForm):
+	
 	class Meta:
 		model = Hackathon
 		fields = ['name', 'description', 'max_members', 'date', 'duration', 'tags']
@@ -67,9 +64,7 @@ class NewHackathonForm(forms.ModelForm):
 
 class CreateTeamForm(forms.Form):
 	name = forms.CharField(max_length=100, required=True)
-
-
-# participant1 = forms.CharField(max_length=50, widget=forms.TextInput(attrs={
+	#participant1 = forms.CharField(max_length=50, widget=forms.TextInput(attrs={
 #		'placeholder': 'username',
 #	}), required=True)
 #	participant2 = forms.CharField(max_length=50, widget=forms.TextInput(attrs={
@@ -93,3 +88,4 @@ class ReviewForm(forms.ModelForm):
 	class Meta:
 		model = HackRateByUser
 		fields = ['rate', 'comment']
+
