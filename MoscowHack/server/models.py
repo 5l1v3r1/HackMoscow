@@ -156,11 +156,14 @@ class Achievement(models.Model):
 	info = models.CharField(max_length=1000)
 
 
+RATES = ((1, 'Very bad'), (2, 'Bad'), (3, 'Medium'), (4, 'Good'), (5, 'Perfect'))
+
+
 class HackRateByUser(models.Model):
 	'''model for rates by User'''
 	user = models.ForeignKey(Profile, on_delete=models.CASCADE)
 	hack = models.ForeignKey(Hackathon, on_delete=models.CASCADE)
-	rate = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+	rate = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], choices=RATES)
 	comment = models.CharField(max_length=1000)
 
 
