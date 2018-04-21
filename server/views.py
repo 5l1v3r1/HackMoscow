@@ -150,3 +150,11 @@ def change_hackathon(request, id):
 	else:
 		form = NewHackathonForm(instance=hackaton)
 	return render(request, 'change_hack_info.html', {'form': form})
+
+
+def hack_info(request, hack_id):
+	hack = Hackathon.objects.get(id = hack_id)
+	if hack!=None:
+		return render(request, 'hack_info.html', {'hack':hack})
+	else:
+		return HttpResponse("404")
