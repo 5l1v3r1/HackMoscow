@@ -305,3 +305,13 @@ def data(request):
 
 def counter(request):
 	return render(request, 'peoplecounter.html')
+
+
+# teams view
+@login_required
+def teams_view(request):
+	if request.method == 'GET':
+		teams = Team.objects.all()
+		user = Profile.objects.get(user_id=request.user.id)
+
+		return render(request, 'teams.html', {'teams': teams, 'user': 'users'})

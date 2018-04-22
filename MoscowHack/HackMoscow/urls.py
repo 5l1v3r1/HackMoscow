@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from server.views import team_info, create_team, hack_info, signup, signin, hackaton_list, new_hackathon, change_hackathon, data, add_user_to_hack, user_info, add_user_to_team, counter, other_user, users_rating
- 
+from server.views import teams_view
 from ajax_select import urls as ajax_select_urls
 from . import settings
 
@@ -27,6 +27,7 @@ urlpatterns = [
     path('signup/', signup, name='sign_up'),
     path('teams/<int:team_id>', team_info, name='teams'),
 	path('create_team/<int:hack_id>', create_team, name='create_team'),
+	path('teams/', teams_view, name='teams_view'),
     path('signin/', signin),
     path('lk/', user_info, name='profile'),
 	path('user/<int:user_id>', other_user, name='other_user'),
