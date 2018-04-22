@@ -56,7 +56,11 @@
                     </div>
 
                     <div class="hackathones ds-broad">
-
+                        {% for team in teams %}
+                            <div>
+                                <p> <a href="{% url 'teams' team.id %}">{{ team.name }}</a></p>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
             </td>
