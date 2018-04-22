@@ -37,9 +37,12 @@ def user_info(request):
 				rate.save()
 			achievs = user.achievement_set.all()
 			diagram = rate.diagram
+
+			teams = user.user.team_set.all()
+
 			return render(request, 'profile.html',
 						  {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart': diagram,
-						   'achieves': achievs})
+						   'achieves': achievs, 'teams': teams})
 
 # other user page
 def other_user(request, user_id):
@@ -55,7 +58,10 @@ def other_user(request, user_id):
 			rate.save()
 		achievs = user.achievement_set.all()
 		diagram = rate.diagram
-		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart': diagram, 'achieves': achievs})
+
+		teams = user.user.team_set.all()
+
+		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart': diagram, 'achieves': achievs, 'teams': teams})
 
 
 @login_required
