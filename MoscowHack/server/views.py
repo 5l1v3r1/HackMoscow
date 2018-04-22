@@ -263,6 +263,7 @@ def hack_info(request, hack_id):
 		form = ReviewForm()
 
 	return render(request, 'hack_info.html', {'hack': hack,
+											  'user': Profile.objects.get(id=user.id),
 											  'user_id': user.id,
 											  'is_user_applied': applied_users.count() != 0,
 											  'user_has_team': users_team_in_hack is not None,
