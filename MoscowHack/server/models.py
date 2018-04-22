@@ -151,7 +151,6 @@ class UserRating(models.Model):
 class Achievement(models.Model):
 	'''class fot achievement'''
 	user = models.ManyToManyField(Profile)
-	receiving_date = models.DateTimeField()
 	image = models.ImageField()
 	info = models.CharField(max_length=1000)
 

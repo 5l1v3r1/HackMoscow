@@ -27,16 +27,18 @@ from .utils import rating, get_user_rating
 def user_info(request):
 	if request.method == 'GET':
 		user = Profile.objects.get(user_id=request.user.id)
-		skills = user.skills.all()
-		user_hack_rating = 0
-		try:
-			rate = UserRating.objects.get(user_id=user.id)
-		except:
-			rate = UserRating(user_id=user.id)
-		achievs = user.achievement_set.all()
-		diagram = rate.diagram
-		return render(request, 'profile.html',
-					  {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart': diagram})
+		if user!=None:
+			skills = user.skills.all()
+			user_hack_rating = 0
+			try:
+				rate = UserRating.objects.get(user_id=user.id)
+			except:
+				rate = UserRating(user_id=user.id)
+			achievs = user.achievement_set.all()
+			diagram = rate.diagram
+			return render(request, 'profile.html',
+						  {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart': diagram,
+						   'achieves': achievs})
 
 # other user page
 def other_user(request, user_id):
@@ -137,6 +139,7 @@ def signup(request):
 			user = authenticate(username=username, password=raw_password)
 			login(request, user)
 			user = Profile.objects.filter(user__username=request.user.username).first()
+			user.achievement_set.add(Achievement.objects.get(id=1))
 			hackatons = Hackathon.objects.all()
 			return render(request, 'hackaton_list.html', {'hacks': hackatons, 'user': user})
 	else:
