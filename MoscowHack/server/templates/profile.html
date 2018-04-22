@@ -29,7 +29,7 @@
                 <a class="nav-link navbar-fontSize" href="{% url 'rating' %}">Хакеры</a>
             </li>
             <li class="nav-item" style="padding-left: 5%">
-                <a class="nav-link navbar-fontSize" href="{% url 'teams_view' %}">Команды</a>
+                <a class="nav-link navbar-fontSize" href="#">Команды</a>
             </li>
         </ul>
     </div>
@@ -44,10 +44,9 @@
                     </div>
 
                     <div class="achievement ds-broad">
-                        <ul class="list-group">
+                        <ul class="list-group list-group-horizontal">
                             {% for achiev in achieves %}
-                                <li class="list-group-item">{{ achiev.info }}</li>
-                                    <img src="{{ achiev.image }}" style="height: 400px; width: 400px;" alt="">
+                                <li class="list-group-item"><div style="width: 80px; height: 20px; margin-bottom: 5px;"><img src="{{ achiev.image }}" style="height: 30px; width: 30px;" alt=""><p style="position: relative; left: 40px; bottom: 37px;">{{ achiev.info }}</p></div></li>
                             {% endfor %}
                         </ul>
                     </div>
