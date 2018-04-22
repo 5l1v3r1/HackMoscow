@@ -10,6 +10,8 @@ from .models import Hackathon, Tag
 from ajax_select.fields import AutoCompleteSelectMultipleField, AutoCompleteSelectField
 from ajax_select import make_ajax_field
 from django.forms import models
+from django.contrib.admin.widgets import AdminDateWidget
+from django.forms.fields import DateField
 
 class SignUpForm(UserCreationForm):
 	first_name = forms.CharField(max_length=30, required=True)
@@ -58,7 +60,7 @@ class NewHackathonForm(forms.ModelForm):
 
 	def __init__(self, *args, **kwargs):
 		super(NewHackathonForm, self).__init__(*args, **kwargs)
-		self.fields['date'].widget = forms.DateInput(format='%d/%m/%y')
+		self.fields['date'] = DateField(widget=forms.SelectDateWidget())
 		self.fields['tags'] = AutoCompleteSelectMultipleField('tags')
 
 
