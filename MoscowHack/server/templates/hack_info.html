@@ -46,7 +46,7 @@
 							<div class="registration-buttone">
 								{% if not is_user_applied %}
                                     <div class="team-button ds-broad"><a href="{% url 'create_team' hack.id %}">Создать команду</a></div>
-								    <div class="team-button-2 team-button ds-broad"><a href="{% url 'teams_view' hack.id %}">Найти команду</a></div>
+								    <div class="team-button-2 team-button ds-broad"><a href="{% url 'teams' hack.id %}">Найти команду</a></div>
 								{% else %}
 								    <div style="width: 100%">У вас уже есть команда:<a href = "{% url 'teams' users_team_in_hack.id%}">{{ users_team_in_hack.name }}</a></div>
 								{% endif %}
