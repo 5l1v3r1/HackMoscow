@@ -1,0 +1,54 @@
+@charset "UTF-8";
+/* CSS Document */
+
+.rightBoard{}
+
+.leftBoard{
+}
+
+.board{
+	margin: 0px auto;
+	width: 60%;
+}
+
+.avatar{
+	width: 400px;
+	height: 400px;
+}
+
+.registration-buttone{
+	width: 400px;
+	height: 100px;
+}
+
+.userInfo{
+	width: 600px;
+	height: 500px;
+}
+
+.org-info{
+	width: 1010px;
+}
+
+.org-content-test{
+	height: 500px;
+}
+
+.org-content-test-txt{
+	text-align: center;
+	position: relative;
+	top: 250px;
+}
+
+.team-button{
+	text-align: center;
+	padding-top: 30px;
+	position: relative;
+	width: 197px;
+	height: 100px;
+}
+
+.team-button-2{
+	bottom: 103px;
+	left: 201px;
+}
