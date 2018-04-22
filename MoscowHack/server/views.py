@@ -49,7 +49,7 @@ def other_user(request, user_id):
 		user_hack_rating = get_user_rating(user)
 
 		try:
-			rate = UserRating.objects.get(user_id=user.id)
+			rate = UserRating.objects.get(user_id=user.user_id)
 		except:
 			rate = UserRating(user_id=user_id)
 			rate.save()
@@ -302,7 +302,7 @@ def add_user_to_team(request, team_id, user_id):
 		team = get_object_or_404(Team, id=team_id)
 		user = get_object_or_404(User, id=user_id)
 		team.users.add(user)
-	return redirect('teams', hack_id=team_id)
+	return redirect('teams', team_id=team_id)
 
 
 def data(request):
