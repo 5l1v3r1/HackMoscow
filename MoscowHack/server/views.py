@@ -55,7 +55,7 @@ def other_user(request, user_id):
 			rate.save()
 		achievs = user.achievement_set.all()
 		diagram = rate.diagram
-		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart': diagram})
+		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart': diagram, 'achieves': achievs})
 
 
 @login_required
