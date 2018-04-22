@@ -42,6 +42,7 @@ class Profile(models.Model):
 class Hackathon(models.Model):
 	'''model for hackathon'''
 	name = models.CharField(max_length=300)
+	avatar = models.ImageField(upload_to='uploads/', default = 'unknown_img.jpg')
 	description = models.CharField(max_length=5000, default="")
 	date = models.DateField()
 	users = models.ManyToManyField(User)

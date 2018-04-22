@@ -53,10 +53,9 @@ class SkillSearch(forms.Form):
 
 
 class NewHackathonForm(forms.ModelForm):
-	
 	class Meta:
 		model = Hackathon
-		fields = ['name', 'description', 'max_members', 'date', 'duration', 'tags']
+		fields = ['avatar', 'name', 'description', 'max_members', 'date', 'duration', 'tags']
 
 	def __init__(self, *args, **kwargs):
 		super(NewHackathonForm, self).__init__(*args, **kwargs)

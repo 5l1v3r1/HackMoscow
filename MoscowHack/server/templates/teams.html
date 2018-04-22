@@ -47,7 +47,7 @@
                                 <p><a href="{% url 'other_user' teammate.profile.id%}">{{ teammate.profile.name }} {{ teammate.profile.surname }} ({{ teammate.username }})</a></p>
                             {% endfor %}
 				        </div>
-                        <a href="" class="hackathone-moreInfo">Подробнее</a>
+                        <a href="{% url 'teams' team.id%}" class="hackathone-moreInfo">Подробнее</a>
 			        </div>
 		        </div>
             {% endfor %}

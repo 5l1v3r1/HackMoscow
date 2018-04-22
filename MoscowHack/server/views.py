@@ -178,11 +178,15 @@ def signin(request):
 @login_required
 def new_hackathon(request):
 	if request.method == 'POST':
-		form = NewHackathonForm(request.POST)
+		form = NewHackathonForm(request.POST, request.FILES)
 		if form.is_valid():
 			hackathon = form.save()
-			hackathon.refresh_from_db()
+			#print(hackathon.name)
+			#hackathon.avatar
 			hackathon.save()
+			#hackathon.avatar =  request.FILES['avatar']
+			#hackathon.save()
+			#print(request.FILES)
 			tags = request.POST.getlist('tags')
 			tags = tags[0].split('|')
 			if len(tags) != 2:
