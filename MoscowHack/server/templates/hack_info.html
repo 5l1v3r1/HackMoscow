@@ -48,7 +48,7 @@
 								<div class="team-button ds-broad">Создать команду</div>
 								<div class="team-button-2 team-button ds-broad">Найти команду</div>
 								{% else %}
-								<div style="width: 100%">У вас уже есть команда:{{ users_team_in_hack.name }}</div>
+								<div style="width: 100%">У вас уже есть команда:<a href = "{% url 'teams' users_team_in_hack.id%}">{{ users_team_in_hack.name }}</a></div>
 								{% endif %}
 							</div>
 						</div>
