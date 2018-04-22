@@ -29,11 +29,12 @@ def user_info(request):
 		user = Profile.objects.get(user_id=request.user.id)
 		if user!=None:
 			skills = user.skills.all()
-			user_hack_rating = 0
+			user_hack_rating = get_user_rating(user)
 			try:
 				rate = UserRating.objects.get(user_id=user.id)
 			except:
 				rate = UserRating(user_id=user.id)
+				rate.save()
 			achievs = user.achievement_set.all()
 			diagram = rate.diagram
 			return render(request, 'profile.html',
@@ -51,8 +52,10 @@ def other_user(request, user_id):
 			rate = UserRating.objects.get(user_id=user.id)
 		except:
 			rate = UserRating(user_id=user_id)
+			rate.save()
+		achievs = user.achievement_set.all()
 		diagram = rate.diagram
-		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart': diagram})
+		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart': diagram, 'achieves': achievs})
 
 
 @login_required
