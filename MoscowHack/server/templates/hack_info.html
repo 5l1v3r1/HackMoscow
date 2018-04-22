@@ -27,7 +27,7 @@
 						<a class="nav-link navbar-fontSize" href="{% url 'rating' %}">Хакеры</a>
 					</li>
 					<li class="nav-item" style="padding-left: 5%">
-						<a class="nav-link navbar-fontSize" href="#">Команды</a>
+						<a class="nav-link navbar-fontSize" href="{% url 'teams_view' %}">Команды</a>
 					</li>
 				</ul>
 				<div class="user-window">
@@ -45,10 +45,10 @@
 							</div>
 							<div class="registration-buttone">
 								{% if not is_user_applied %}
-								<div class="team-button ds-broad">Создать команду</div>
-								<div class="team-button-2 team-button ds-broad">Найти команду</div>
+                                    <div class="team-button ds-broad"><a href="{% url 'create_team' hack.id %}">Создать команду</a></div>
+								    <div class="team-button-2 team-button ds-broad">Найти команду</div>
 								{% else %}
-								<div style="width: 100%">У вас уже есть команда:<a href = "{% url 'teams' users_team_in_hack.id%}">{{ users_team_in_hack.name }}</a></div>
+								    <div style="width: 100%">У вас уже есть команда:<a href = "{% url 'teams' users_team_in_hack.id%}">{{ users_team_in_hack.name }}</a></div>
 								{% endif %}
 							</div>
 						</div>
