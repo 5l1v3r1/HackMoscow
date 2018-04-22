@@ -34,6 +34,7 @@ def user_info(request):
 				rate = UserRating.objects.get(user_id=user.id)
 			except:
 				rate = UserRating(user_id=user.id)
+				rate.save()
 			achievs = user.achievement_set.all()
 			diagram = rate.diagram
 			return render(request, 'profile.html',
