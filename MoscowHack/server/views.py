@@ -136,7 +136,9 @@ def signup(request):
 			raw_password = form.cleaned_data.get('password1')
 			user = authenticate(username=username, password=raw_password)
 			login(request, user)
-			return HttpResponse("You did it!!!!")
+			user = Profile.objects.filter(user__username=request.user.username).first()
+			hackatons = Hackathon.objects.all()
+			return render(request, 'hackaton_list.html', {'hacks': hackatons, 'user': user})
 	else:
 		form = SignUpForm()
 	return render(request, 'signup.html', {'form': form})
