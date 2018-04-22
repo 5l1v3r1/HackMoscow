@@ -49,7 +49,7 @@ def other_user(request, user_id):
 		user_hack_rating = get_user_rating(user)
 
 		try:
-			rate = UserRating.objects.get(user_id=user.id)
+			rate = UserRating.objects.get(user_id=user.user_id)
 		except:
 			rate = UserRating(user_id=user_id)
 			rate.save()
