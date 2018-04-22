@@ -1,61 +1,82 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>{{ hack.name }}</title>
-</head>
-<body>
-<div>
-    <h1>{{ hack.name }}</h1>
-    <p>{{ hack.description }}</p>
-    <p>{{ hack.date }}</p>
-    <p><i>Rating: </i>
-        {% if rating != -1 %}
-            {{ rating }}
-        {% else %}
-            Nothing
-        {% endif %}
-    </p>
-    {% if not is_user_applied %}
-    <input type="submit" value="Apply"
-        onclick="window.location='{% url 'add_user_to_hack' hack.id user_id %}';" />
-    {% elif user_has_team %}
-        <p>You are applied! And you are at team {{ users_team_in_hack.name }}</p>
-        {% if not has_rate %}
-            <input type="button" value="review" onclick="reviewShowOnClick()">
-        {% endif %}
-    {% else %}
-        <input type="submit" value="Create team"
-        onclick="window.location='{% url 'create_team' hack.id %}';" />
-    {% endif %}
+		<meta charset="UTF-8">
+		{% load static %}
+		<title>{{ hack.name }}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+		<link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+		<link href="{% static 'css/hackathone.css' %}" rel="stylesheet">
+		<link href="{% static 'css/design.css' %}" rel="stylesheet">
+	</head>
 
-    {% if  has_rate %}
-        <p><b>You rate: </b> {{ rate.rate }}</p>
-        <p><b>You comment: </b>{{ rate.comment }}</p>
-    {% else %}
-    <div style="visibility: hidden" id="review">
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-height">
+			<a class="navbar-brand center logo" href="#">In.Team</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar1" aria-controls="navbar1" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
 
-        <form method="post">
-            {% csrf_token %}
+			<div class="collapse navbar-collapse" id="navbar1">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item">
+						<a class="nav-link navbar-fontSize" href="#">Хакатоны<span class="sr-only">(current)</span></a>
+					</li>
+					<li class="nav-item" style="padding-left: 5%">
+						<a class="nav-link navbar-fontSize" href="#">Хакеры</a>
+					</li>
+					<li class="nav-item" style="padding-left: 5%">
+						<a class="nav-link navbar-fontSize" href="#">Команды</a>
+					</li>
+				</ul>
+				<div class="user-window">
+					<p id="userName" class="lable-userName"><a href="{% url 'profile' %}">{{ user.name }} {{ user.surname }}</a></p>
+					<img src="/media/{{ user.avatar }}" id="user_avatar" class="avatar" alt="">
+				</div>
+			</div>
+		</nav>
+		<div class="board">
+			<table width="300px" cellspacing="0" cellpadding="5">
+				<tr> 
+					<td width="100%" valign="top">
+						<div class="leftBoard">
+							<div class="avatar ds-broad">
+							</div>
 
-            {% if can_review %}
-            {% for field in review_form %}
-                <p>{{ field.label_tag }} {{field}} </p>
-            {% endfor %}
-                <input type="submit" value="Comment"/>
-            {% else %}
-                 <p style="color: red">You're can't vote!</p>
-            {% endif %}
-        </form>
-    </div>
-
-    <script>
-        function reviewShowOnClick() {
-            document.getElementById("review").style.visibility = "visible";
-            //alert("kek!");
-        }
-    </script>
-    {% endif %}
-</div>
-</body>
+							<div class="registration-buttone">
+								{% if not is_user_applied %}
+								<div class="team-button ds-broad">Создать команду</div>
+								<div class="team-button-2 team-button ds-broad">Найти команду</div>
+								{% else %}
+								<div style="width: 100%">У вас уже есть команда:{{ users_team_in_hack.name }}</div>
+								{% endif %}
+							</div>
+						</div>
+					</td>
+					<td width="100%" valign="top">
+						<div class="rightBoard">
+							<div class="userInfo ds-broad">
+								<h1>{{ hack.name }}</h1>
+								<p>{{ hack.description }}</p>
+								<p>{{ hack.date }}</p>
+								<p><i>Rating: </i>
+									{% if rating != -1 %}
+										{{ rating }}
+									{% else %}
+										Nothing
+									{% endif %}
+								</p>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<div class="org-info ds-broad" id="org_content">
+				<div class="org-content-test">
+					<div class="org-content-test-txt">Сдесь может быть ваш контент в html</div>
+				</div>
+			</div>
+		</div>
+	</body>
 </html>
