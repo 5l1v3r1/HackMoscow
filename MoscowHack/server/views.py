@@ -54,12 +54,15 @@ def other_user(request, user_id):
 		diagram = rate.diagram
 		return render(request, 'profile.html', {'user': user, 'user_hack_rating': user_hack_rating, 'skills': skills, 'chart': diagram})
 
+
+@login_required
 # users rating
 def users_rating(request):
 	if request.method == 'GET':
+		user = Profile.objects.get(user_id=request.user.id)
 		users_list = list(Profile.objects.all()) #TODO: нормально сделать
 		users_list.sort(key=get_user_rating, reverse=True)
-		return render(request, 'user_rating.html', {'users': users_list})
+		return render(request, 'user_rating.html', {'users': users_list, 'user': user})
 
 
 @login_required
@@ -195,7 +198,7 @@ def new_hackathon(request):
 
 @login_required
 def hackaton_list(request):
-	user = Profile.objects.filter(user__username=request.user.username).first()
+	user = Profile.objects.get(user_id=request.user.id)
 	hackatons = Hackathon.objects.all()
 	print(user.avatar)
 	return render(request, 'hackaton_list.html', {'hacks': hackatons, 'user': user})
@@ -314,4 +317,4 @@ def teams_view(request):
 		teams = Team.objects.all()
 		user = Profile.objects.get(user_id=request.user.id)
 
-		return render(request, 'teams.html', {'teams': teams, 'user': 'users'})
+		return render(request, 'teams.html', {'teams': teams, 'user': user})
