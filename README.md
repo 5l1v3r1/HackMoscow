@@ -5,6 +5,6 @@ Site for Russian Hackers which helps to find teammates by skill set, to find new
 Also it has face recognition system to count amount of atendance.
 
 ## Technologies
-Python Django, PostrgeSQL, TensorFlow
+Python Django, MySQL, OpenCV
 
 
